@@ -16,26 +16,25 @@
 
 package com.sofiyavolkovaproyects.texthunter.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.sofiyavolkovaproyects.texthunter.ui.theme.MyApplicationTheme
+import androidx.compose.material3.Scaffold
+import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
+import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+            TextHunterApp {
+                Scaffold(
+                    topBar = { MainAppBar(true) },
                 ) {
                     MainNavigation()
                 }
@@ -43,3 +42,5 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
