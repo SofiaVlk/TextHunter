@@ -21,7 +21,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Scaffold
+import androidx.navigation.compose.rememberNavController
+import com.sofiyavolkovaproyects.texthunter.ui.components.BottomNavigationBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavHostContainer
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,12 +34,19 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            val navController = rememberNavController()
+
             TextHunterApp {
                 Scaffold(
                     topBar = { MainAppBar(true) },
-                ) {
-                    MainNavigation()
+                    bottomBar = {
+                        BottomNavigationBar { navController.navigate(it) }
+                    }
+                ) { padding ->
+                    NavHostContainer(navController, padding)
+                //MainNavigation()
                 }
             }
         }
