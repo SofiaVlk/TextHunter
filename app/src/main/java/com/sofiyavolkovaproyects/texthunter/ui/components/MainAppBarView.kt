@@ -1,7 +1,7 @@
 package com.sofiyavolkovaproyects.texthunter.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,7 +18,7 @@ import com.sofiyavolkovaproyects.texthunter.R
 @Composable
 internal fun MainAppBar(
     navigationAvailable: Boolean = false,
-    onclick: (Boolean) -> Unit = {}
+    onClick: () -> Unit = {}
 ) {
     TopAppBar(
         title = {
@@ -31,8 +31,8 @@ internal fun MainAppBar(
         navigationIcon = {
             if (navigationAvailable) {
                 AppbarAction(
-                    imageVector = Icons.Default.ArrowBack,
-                    onclclick = { onclick }
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    onClick = onClick
                 )
             }
         }
@@ -42,9 +42,9 @@ internal fun MainAppBar(
 @Composable
 private fun AppbarAction(
     imageVector: ImageVector,
-    onclclick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
-    IconButton(onClick = onclclick) {
+    IconButton(onClick = onClick) {
         Icon(
             imageVector = imageVector,
             contentDescription = null

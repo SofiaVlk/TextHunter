@@ -129,4 +129,7 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.runner)
+
+    implementation(libs.material.icons.core)
+    implementation(libs.material.icons.extended)
 }
