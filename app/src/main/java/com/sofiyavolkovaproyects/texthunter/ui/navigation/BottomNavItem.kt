@@ -34,6 +34,10 @@ sealed class BottomNavItem(
     data object Main : BottomNavItem(
         selected = true,
         baseRoute = MAIN_ROUTE,
+        navArgs = listOf(
+            IconNavArg,
+            TitleNavArg
+        ),
         navData = MainNavData
     )
     data object Gallery : BottomNavItem(
