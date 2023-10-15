@@ -16,4 +16,7 @@
 
 <resources>
     <string name="app_name">TextHunter</string>
+    <string name="icn_camera_view_view_gallery_content_description">\n</string>
+    <string name="icn_camera_view_camera_shutter_content_description" />
+    <string name="icn_camera_view_switch_camera_content_description" />
 </resources>
