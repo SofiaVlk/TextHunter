@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.sofiyavolkovaproyects.texthunter.ui.landingitemtype
+package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 
 
-import com.sofiyavolkovaproyects.texthunter.data.LandingItemTypeRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -31,26 +30,25 @@ import org.junit.Test
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
-class LandingItemTypeViewModelTest {
+class SavedDocsViewModelTest {
     @Test
     fun uiState_initiallyLoading() = runTest {
-        val viewModel = LandingItemTypeViewModel(FakeLandingItemTypeRepository())
-        assertEquals(viewModel.uiState.first(), LandingItemTypeUiState.Loading)
+        val viewModel = SavedDocsViewModel(FakeLandingItemTypeRepository())
+        assertEquals(viewModel.uiState.first(), SavedDocsUiState.Loading)
     }
 
     @Test
     fun uiState_onItemSaved_isDisplayed() = runTest {
-        val viewModel = LandingItemTypeViewModel(FakeLandingItemTypeRepository())
-        assertEquals(viewModel.uiState.first(), LandingItemTypeUiState.Loading)
+        val viewModel = SavedDocsViewModel(FakeLandingItemTypeRepository())
+        assertEquals(viewModel.uiState.first(), SavedDocsUiState.Loading)
     }
 }
 
-private class FakeLandingItemTypeRepository : LandingItemTypeRepository {
+private class FakeLandingItemTypeRepository : DocumentsRepository {
 
     private val data = mutableListOf<String>()
 
-    override val landingItemTypes: Flow<List<String>>
+    override val savedDocuments: Flow<List<String>>
         get() = flow { emit(data.toList()) }
 
     override suspend fun add(name: String) {

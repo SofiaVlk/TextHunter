@@ -16,8 +16,8 @@
 
 package com.sofiyavolkovaproyects.texthunter.data.di
 
-import com.sofiyavolkovaproyects.texthunter.data.DefaultLandingItemTypeRepository
-import com.sofiyavolkovaproyects.texthunter.data.LandingItemTypeRepository
+import com.sofiyavolkovaproyects.texthunter.data.DefaultDocumentsRepository
+import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,13 +33,13 @@ interface DataModule {
 
     @Singleton
     @Binds
-    fun bindsLandingItemTypeRepository(
-        landingItemTypeRepository: DefaultLandingItemTypeRepository
-    ): LandingItemTypeRepository
+    fun bindsDocumentsRepository(
+        documentsRepository: DefaultDocumentsRepository
+    ): DocumentsRepository
 }
 
-class FakeLandingItemTypeRepository @Inject constructor() : LandingItemTypeRepository {
-    override val landingItemTypes: Flow<List<String>> = flowOf(fakeLandingItemTypes)
+class FakeLandingItemTypeRepository @Inject constructor() : DocumentsRepository {
+    override val savedDocuments: Flow<List<String>> = flowOf(fakeLandingItemTypes)
 
     override suspend fun add(name: String) {
         throw NotImplementedError()

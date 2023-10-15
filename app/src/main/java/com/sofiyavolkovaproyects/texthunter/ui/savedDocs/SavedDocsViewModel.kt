@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.sofiyavolkovaproyects.texthunter.ui.landingitemtype
+package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sofiyavolkovaproyects.texthunter.data.LandingItemTypeRepository
-import com.sofiyavolkovaproyects.texthunter.ui.landingitemtype.LandingItemTypeUiState.Error
-import com.sofiyavolkovaproyects.texthunter.ui.landingitemtype.LandingItemTypeUiState.Loading
-import com.sofiyavolkovaproyects.texthunter.ui.landingitemtype.LandingItemTypeUiState.Success
+import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,24 +32,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LandingItemTypeViewModel @Inject constructor(
-    private val landingItemTypeRepository: LandingItemTypeRepository
+class SavedDocsViewModel @Inject constructor(
+    private val savedDocsRepository: DocumentsRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<LandingItemTypeUiState> = landingItemTypeRepository
-        .landingItemTypes.map<List<String>, LandingItemTypeUiState>(::Success)
+    val uiState: StateFlow<SavedDocsUiState> = savedDocsRepository
+        .savedDocuments.map<List<String>, SavedDocsUiState>(::Success)
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
-    fun addLandingItemType(name: String) {
+    fun addDocument(name: String) {
         viewModelScope.launch {
-            landingItemTypeRepository.add(name)
+            savedDocsRepository.add(name)
         }
     }
 }
 
-sealed interface LandingItemTypeUiState {
-    object Loading : LandingItemTypeUiState
-    data class Error(val throwable: Throwable) : LandingItemTypeUiState
-    data class Success(val data: List<String>) : LandingItemTypeUiState
+sealed interface SavedDocsUiState {
+    data object Loading : SavedDocsUiState
+    data class Error(val throwable: Throwable) : SavedDocsUiState
+    data class Success(val data: List<String>) : SavedDocsUiState
 }

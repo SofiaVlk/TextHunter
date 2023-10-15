@@ -15,11 +15,13 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import com.sofiyavolkovaproyects.texthunter.R
 import java.io.File
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+private const val PHOTO_EXTENSION = ".jpg"
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { cameraProvider ->
         cameraProvider.addListener({
@@ -27,10 +29,6 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
         }, ContextCompat.getMainExecutor(this))
     }
 }
-
-private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
-private const val PHOTO_EXTENSION = ".jpg"
-
 
 fun ImageCapture.takePicture(
     context: Context,

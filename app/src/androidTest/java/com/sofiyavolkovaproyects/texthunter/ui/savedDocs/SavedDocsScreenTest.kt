@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sofiyavolkovaproyects.texthunter.ui.landingitemtype
+package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -27,10 +27,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * UI tests for [LandingItemTypeScreen].
+ * UI tests for [SavedDocsScreen].
  */
 @RunWith(AndroidJUnit4::class)
-class LandingItemTypeScreenTest {
+class SavedDocsScreenTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
@@ -38,7 +38,7 @@ class LandingItemTypeScreenTest {
     @Before
     fun setup() {
         composeTestRule.setContent {
-            LandingItemTypeScreen(FAKE_DATA, onSave = {})
+            SavedDocsScreen(FAKE_DATA, onSave = {})
         }
     }
 
