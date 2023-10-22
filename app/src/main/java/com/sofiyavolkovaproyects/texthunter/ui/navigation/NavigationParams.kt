@@ -8,15 +8,14 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TitleNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.GalleryNavData
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.HunterNavData
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.MainNavData
-import java.util.Locale
+import java.util.*
 
 const val GALLERY_ROUTE = "gallery"
 const val HUNTER_ROUTE = "hunter"
 const val MAIN_ROUTE = "main"
 
 
-sealed class BottomNavItem(
-    val selected: Boolean = true,
+sealed class NavigationParams(
     var baseRoute: String,
     private val navArgs: List<NavArg> = emptyList(),
     val navData: NavData
@@ -31,8 +30,7 @@ sealed class BottomNavItem(
         navArgument(it.key) { type = it.navType }
     }
 
-    data object Main : BottomNavItem(
-        selected = true,
+    data object Main : NavigationParams(
         baseRoute = MAIN_ROUTE,
         navArgs = listOf(
             IconNavArg,
@@ -40,8 +38,7 @@ sealed class BottomNavItem(
         ),
         navData = MainNavData
     )
-    data object Gallery : BottomNavItem(
-        selected = true,
+    data object Gallery : NavigationParams(
         baseRoute = GALLERY_ROUTE,
         navArgs = listOf(
             IconNavArg,
@@ -50,7 +47,7 @@ sealed class BottomNavItem(
         navData = GalleryNavData
     )
 
-    data object Hunter : BottomNavItem(
+    data object Hunter : NavigationParams(
         baseRoute = HUNTER_ROUTE,
         navArgs = listOf(
             IconNavArg,

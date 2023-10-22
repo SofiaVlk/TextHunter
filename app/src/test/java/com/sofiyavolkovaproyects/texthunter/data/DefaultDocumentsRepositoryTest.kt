@@ -17,8 +17,7 @@
 package com.sofiyavolkovaproyects.texthunter.data
 
 import com.sofiyavolkovaproyects.texthunter.data.local.database.LandingItemType
-import com.sofiyavolkovaproyects.texthunter.data.local.database.LandingItemTypeDao
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.sofiyavolkovaproyects.texthunter.data.local.database.savedDocsDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -27,23 +26,22 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * Unit tests for [DefaultLandingItemTypeRepository].
+ * Unit tests for [DefaultDocumentsRepository].
  */
-@OptIn(ExperimentalCoroutinesApi::class) // TODO: Remove when stable
-class DefaultLandingItemTypeRepositoryTest {
+class DefaultDocumentsRepositoryTest {
 
     @Test
     fun landingItemTypes_newItemSaved_itemIsReturned() = runTest {
-        val repository = DefaultLandingItemTypeRepository(FakeLandingItemTypeDao())
+        val repository = DefaultDocumentsRepository(FakeLandingItemTypeDao())
 
         repository.add("Repository")
 
-        assertEquals(repository.landingItemTypes.first().size, 1)
+        assertEquals(repository.savedDocuments.first().size, 1)
     }
 
 }
 
-private class FakeLandingItemTypeDao : LandingItemTypeDao {
+private class FakeLandingItemTypeDao : savedDocsDao {
 
     private val data = mutableListOf<LandingItemType>()
 

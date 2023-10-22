@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sofiyavolkovaproyects.texthunter.ui.landingitemtype
+package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,35 +38,35 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaproyects.texthunter.ui.theme.MyApplicationTheme
 
 @Composable
-fun LandingItemTypeScreen(modifier: Modifier = Modifier, viewModel: LandingItemTypeViewModel = hiltViewModel()) {
+fun SavedDocsScreen(modifier: Modifier = Modifier, viewModel: SavedDocsViewModel = hiltViewModel()) {
     val items by viewModel.uiState.collectAsStateWithLifecycle()
-    if (items is LandingItemTypeUiState.Success) {
-        LandingItemTypeScreen(
-            items = (items as LandingItemTypeUiState.Success).data,
-            onSave = viewModel::addLandingItemType,
+    if (items is SavedDocsUiState.Success) {
+        SavedDocsScreen(
+            items = (items as SavedDocsUiState.Success).data,
+            onSave = viewModel::addDocument,
             modifier = modifier
         )
     }
 }
 
 @Composable
-internal fun LandingItemTypeScreen(
+internal fun SavedDocsScreen(
     items: List<String>,
     onSave: (name: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier) {
-        var nameLandingItemType by remember { mutableStateOf("Compose") }
+        var nameSavedDocs by remember { mutableStateOf("Compose") }
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TextField(
-                value = nameLandingItemType,
-                onValueChange = { nameLandingItemType = it }
+                value = nameSavedDocs,
+                onValueChange = { nameSavedDocs = it }
             )
 
-            Button(modifier = Modifier.width(96.dp), onClick = { onSave(nameLandingItemType) }) {
+            Button(modifier = Modifier.width(96.dp), onClick = { onSave(nameSavedDocs) }) {
                 Text("Save")
             }
         }
@@ -82,7 +82,7 @@ internal fun LandingItemTypeScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        LandingItemTypeScreen(listOf("Pepe", "Room", "Kotlin"), onSave = {})
+        SavedDocsScreen(listOf("Pepe", "Room", "Kotlin"), onSave = {})
     }
 }
 
@@ -90,6 +90,6 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        LandingItemTypeScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        SavedDocsScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
     }
 }

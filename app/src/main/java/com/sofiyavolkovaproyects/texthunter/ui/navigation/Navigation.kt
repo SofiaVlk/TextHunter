@@ -11,12 +11,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryScreen
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.HunterScreen
-import com.sofiyavolkovaproyects.texthunter.ui.landingitemtype.LandingItemTypeScreen
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.BottomNavItem.Gallery
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.BottomNavItem.Hunter
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.BottomNavItem.Main
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.IconNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TitleNavArg
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Main
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsScreen
 
 @Composable
 fun NavHostContainer(
@@ -31,7 +31,7 @@ fun NavHostContainer(
 
         builder = {
 
-            composable(route = Main.route) { LandingItemTypeScreen(modifier = Modifier.padding(16.dp)) }
+            composable(route = Main.route) { SavedDocsScreen(modifier = Modifier.padding(16.dp)) }
 
             composable(route = Gallery.route, arguments = Gallery.args) {
 
@@ -46,7 +46,7 @@ fun NavHostContainer(
 
                 requireNotNull(icon)
                 requireNotNull(title)
-                HunterScreen(icon, title)
+                HunterScreen()
             }
         })
 

@@ -17,22 +17,22 @@
 package com.sofiyavolkovaproyects.texthunter.data
 
 import com.sofiyavolkovaproyects.texthunter.data.local.database.LandingItemType
-import com.sofiyavolkovaproyects.texthunter.data.local.database.LandingItemTypeDao
+import com.sofiyavolkovaproyects.texthunter.data.local.database.savedDocsDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-interface LandingItemTypeRepository {
-    val landingItemTypes: Flow<List<String>>
+interface DocumentsRepository {
+    val savedDocuments: Flow<List<String>>
 
     suspend fun add(name: String)
 }
 
-class DefaultLandingItemTypeRepository @Inject constructor(
-    private val landingItemTypeDao: LandingItemTypeDao
-) : LandingItemTypeRepository {
+class DefaultDocumentsRepository @Inject constructor(
+    private val landingItemTypeDao: savedDocsDao
+) : DocumentsRepository {
 
-    override val landingItemTypes: Flow<List<String>> =
+    override val savedDocuments: Flow<List<String>> =
         landingItemTypeDao.getLandingItemTypes().map { items -> items.map { it.name } }
 
     override suspend fun add(name: String) {

@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package com.sofiyavolkovaproyects.texthunter.data.local.database
+package com.sofiyavolkovaproyects.texthunter.ui.hunter
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-@Database(entities = [LandingItemType::class], version = 1)
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun landingItemTypeDao(): savedDocsDao
+@HiltViewModel
+class HunterViewModel @Inject constructor(
+) : ViewModel() {
+
+    //val uiState: StateFlow<HunterUiState> =
+
+}
+
+sealed interface HunterUiState {
+    object Loading : HunterUiState
 }

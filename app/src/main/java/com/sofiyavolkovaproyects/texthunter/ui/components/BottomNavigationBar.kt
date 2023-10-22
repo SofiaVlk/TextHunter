@@ -1,18 +1,18 @@
 package com.sofiyavolkovaproyects.texthunter.ui.components
 
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.BottomNavItem.Gallery
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.BottomNavItem.Hunter
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.BottomNavItem.Main
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Main
 
 
 @Composable

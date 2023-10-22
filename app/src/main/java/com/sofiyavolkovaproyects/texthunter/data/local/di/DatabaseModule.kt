@@ -19,7 +19,7 @@ package com.sofiyavolkovaproyects.texthunter.data.local.di
 import android.content.Context
 import androidx.room.Room
 import com.sofiyavolkovaproyects.texthunter.data.local.database.AppDatabase
-import com.sofiyavolkovaproyects.texthunter.data.local.database.LandingItemTypeDao
+import com.sofiyavolkovaproyects.texthunter.data.local.database.savedDocsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,7 +32,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
     @Provides
-    fun provideLandingItemTypeDao(appDatabase: AppDatabase): LandingItemTypeDao {
+    fun provideLandingItemTypeDao(appDatabase: AppDatabase): savedDocsDao {
         return appDatabase.landingItemTypeDao()
     }
 

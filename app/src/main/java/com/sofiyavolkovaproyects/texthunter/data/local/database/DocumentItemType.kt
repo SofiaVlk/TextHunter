@@ -32,7 +32,7 @@ data class LandingItemType(
 }
 
 @Dao
-interface LandingItemTypeDao {
+interface savedDocsDao {
     @Query("SELECT * FROM landingitemtype ORDER BY uid DESC LIMIT 10")
     fun getLandingItemTypes(): Flow<List<LandingItemType>>
 
