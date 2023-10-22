@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import com.sofiyavolkovaproyects.texthunter.R
 import java.io.File
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -67,7 +67,6 @@ fun ImageCapture.takePicture(
         })
 }
 
-
 fun getOutputFileOptions(
     lensFacing: Int,
     photoFile: File
@@ -91,7 +90,6 @@ fun createFile(baseFolder: File, format: String, extension: String) =
             baseFolder,
             formatDate(format) + extension
         )
-
 
 private fun formatDate(format: String) =
     if (VERSION.SDK_INT >= VERSION_CODES.N) {

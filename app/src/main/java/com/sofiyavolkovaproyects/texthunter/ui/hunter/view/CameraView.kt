@@ -47,10 +47,6 @@ import com.sofiyavolkovaproyects.texthunter.ui.hunter.getCameraProvider
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.getOutputDirectory
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.takePicture
 
-
-
-
-
 @Composable
 fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureException) -> Unit) {
 
