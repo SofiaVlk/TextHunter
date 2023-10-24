@@ -29,5 +29,5 @@ class HunterViewModel @Inject constructor(
 }
 
 sealed interface HunterUiState {
-    object Loading : HunterUiState
+    data object Loading : HunterUiState
 }

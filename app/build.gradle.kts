@@ -153,4 +153,7 @@ dependencies {
     // To recognize Latin script
     implementation (libs.mlkit.text.recognition)
 
+    implementation (libs.google.accompanist.permissions)
+
+    implementation(libs.coil.compose)
 }

@@ -19,7 +19,8 @@ ksp = "1.9.10-1.0.13"
 materialIcons = "1.6.0-alpha07"
 camerax_version = "1.3.0-alpha04"
 mlkit_version = "19.0.0"
-
+permissions-version = "0.33.2-alpha"
+coil-version = "2.4.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
@@ -63,6 +64,10 @@ androidx-camera-mlkit-vision = { module = "androidx.camera:camera-mlkit-vision",
 androidx-camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camerax_version" }
 
 mlkit-text-recognition = { module = "com.google.android.gms:play-services-mlkit-text-recognition", version.ref = "mlkit_version" }
+
+google-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "permissions-version" }
+
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil-version" }
 
 
 [plugins]

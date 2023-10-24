@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.view.CameraView
 import java.io.IOException
 import androidx.compose.foundation.layout.Column as Column1
@@ -28,7 +29,9 @@ import androidx.compose.foundation.layout.Column as Column1
 @Composable
 fun HunterScreen(modifier: Modifier = Modifier, viewModel: HunterViewModel = hiltViewModel()) {
     //val items by viewModel.uiState.collectAsStateWithLifecycle()
-    HunterScreenView()
+    RequiresSimplePermission {
+        HunterScreenView()
+    }
 }
 
 @Composable
@@ -38,7 +41,9 @@ fun HunterScreenView() {
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     var openAlertDialog by remember { mutableStateOf(false) }
-    var textCaptured = ""
+    var textCaptured by remember {
+        mutableStateOf("")
+    }
 
     // ...
     when {

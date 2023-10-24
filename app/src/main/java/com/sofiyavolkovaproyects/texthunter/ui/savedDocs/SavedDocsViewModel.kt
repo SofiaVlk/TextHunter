@@ -36,7 +36,7 @@ class SavedDocsViewModel @Inject constructor(
     private val savedDocsRepository: DocumentsRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<SavedDocsUiState> = savedDocsRepository
+    internal val uiState: StateFlow<SavedDocsUiState> = savedDocsRepository
         .savedDocuments.map<List<String>, SavedDocsUiState>(::Success)
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)

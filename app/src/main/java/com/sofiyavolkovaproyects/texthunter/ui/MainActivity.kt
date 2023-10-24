@@ -28,6 +28,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavHostContainer
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
