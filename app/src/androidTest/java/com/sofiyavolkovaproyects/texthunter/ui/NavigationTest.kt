@@ -18,7 +18,7 @@ package com.sofiyavolkovaproyects.texthunter.ui
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import com.sofiyavolkovaproyects.texthunter.data.di.fakeLandingItemTypes
+import com.sofiyavolkovaproyects.texthunter.data.di.fakeDocumentsItemList
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
@@ -36,7 +36,7 @@ class NavigationTest {
     @Test
     fun test1() {
         // TODO: Add navigation tests
-        composeTestRule.onNodeWithText(fakeLandingItemTypes.first(), substring = true).assertExists()
+        composeTestRule.onNodeWithText(fakeDocumentsItemList.first(), substring = true).assertExists()
     }
 }
 

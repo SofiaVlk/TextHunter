@@ -16,8 +16,8 @@
 
 package com.sofiyavolkovaproyects.texthunter.data
 
-import com.sofiyavolkovaproyects.texthunter.data.local.database.LandingItemType
-import com.sofiyavolkovaproyects.texthunter.data.local.database.savedDocsDao
+import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
+import com.sofiyavolkovaproyects.texthunter.data.local.database.saveDocDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -41,15 +41,15 @@ class DefaultDocumentsRepositoryTest {
 
 }
 
-private class FakeLandingItemTypeDao : savedDocsDao {
+private class FakeLandingItemTypeDao : saveDocDao {
 
-    private val data = mutableListOf<LandingItemType>()
+    private val data = mutableListOf<DocumentItem>()
 
-    override fun getLandingItemTypes(): Flow<List<LandingItemType>> = flow {
+    override fun getDocumentItems(): Flow<List<DocumentItem>> = flow {
         emit(data)
     }
 
-    override suspend fun insertLandingItemType(item: LandingItemType) {
+    override suspend fun insertDocItem(item: DocumentItem) {
         data.add(0, item)
     }
 }

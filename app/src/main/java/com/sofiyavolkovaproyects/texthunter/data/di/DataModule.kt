@@ -16,8 +16,10 @@
 
 package com.sofiyavolkovaproyects.texthunter.data.di
 
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.sofiyavolkovaproyects.texthunter.data.DefaultDocumentsRepository
 import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
+import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,12 +40,15 @@ interface DataModule {
     ): DocumentsRepository
 }
 
-class FakeLandingItemTypeRepository @Inject constructor() : DocumentsRepository {
-    override val savedDocuments: Flow<List<String>> = flowOf(fakeLandingItemTypes)
+class FakeDocumentsRepository @Inject constructor() : DocumentsRepository {
+    override val savedDocuments: Flow<List<DocumentItem>> = flowOf(fakeDocumentsItemList)
 
-    override suspend fun add(name: String) {
+    override suspend fun add(title: String, body: String) {
         throw NotImplementedError()
     }
 }
 
-val fakeLandingItemTypes = listOf("One", "Two", "Three")
+val fakeDocumentsItemList = (1..4).map { order ->
+    DocumentItem("Documento $order", LoremIpsum(50).values.first())
+}
+

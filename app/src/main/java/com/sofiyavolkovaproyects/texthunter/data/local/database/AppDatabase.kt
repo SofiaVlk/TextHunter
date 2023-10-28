@@ -19,7 +19,7 @@ package com.sofiyavolkovaproyects.texthunter.data.local.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [LandingItemType::class], version = 1)
+@Database(entities = [DocumentItem::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun landingItemTypeDao(): savedDocsDao
+    abstract fun docsItemTypeDao(): saveDocDao
 }

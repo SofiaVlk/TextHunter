@@ -18,7 +18,7 @@ package com.sofiyavolkovaproyects.texthunter.testdi
 
 import com.sofiyavolkovaproyects.texthunter.data.LandingItemTypeRepository
 import com.sofiyavolkovaproyects.texthunter.data.di.DataModule
-import com.sofiyavolkovaproyects.texthunter.data.di.FakeLandingItemTypeRepository
+import com.sofiyavolkovaproyects.texthunter.data.di.FakeDocumentsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent
@@ -33,6 +33,6 @@ interface FakeDataModule {
 
     @Binds
     abstract fun bindRepository(
-        fakeRepository: FakeLandingItemTypeRepository
+        fakeRepository: FakeDocumentsRepository
     ): LandingItemTypeRepository
 }

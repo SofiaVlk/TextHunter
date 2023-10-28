@@ -18,11 +18,15 @@ package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -31,18 +35,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
+import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.theme.MyApplicationTheme
 
 @Composable
-fun SavedDocsScreen(modifier: Modifier = Modifier, viewModel: SavedDocsViewModel = hiltViewModel()) {
+fun SavedDocsScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SavedDocsViewModel = hiltViewModel()
+) {
     val items by viewModel.uiState.collectAsStateWithLifecycle()
     if (items is SavedDocsUiState.Success) {
         SavedDocsScreen(
-            items = (items as SavedDocsUiState.Success).data,
+            docList = (items as SavedDocsUiState.Success).data,
             onSave = viewModel::addDocument,
             modifier = modifier
         )
@@ -51,28 +62,67 @@ fun SavedDocsScreen(modifier: Modifier = Modifier, viewModel: SavedDocsViewModel
 
 @Composable
 internal fun SavedDocsScreen(
-    items: List<String>,
-    onSave: (name: String) -> Unit,
+    docList: List<DocumentItem>,
+    onSave: (title: String, body: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier) {
-        var nameSavedDocs by remember { mutableStateOf("Compose") }
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+    Column(
+        modifier.padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+
+    ) {
+        var titleState by remember { mutableStateOf("Compose") }
+        var bodyState by remember { mutableStateOf("Compose") }
+
             TextField(
-                value = nameSavedDocs,
-                onValueChange = { nameSavedDocs = it }
+                value = titleState,
+                onValueChange = { titleState = it }
             )
 
-            Button(modifier = Modifier.width(96.dp), onClick = { onSave(nameSavedDocs) }) {
-                Text("Save")
+            TextField(
+                value = bodyState,
+                onValueChange = { bodyState = it }
+            )
+
+        ButtonBasic(
+            onClick = { onSave(titleState, bodyState) },
+            text = "Save"
+        )
+
+
+        LazyColumn {
+
+            items(docList) { document ->
+
+                ElevatedCard(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 6.dp
+                    ),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp)
+
+                ) {
+                    Text(
+                        text = document.title,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = document.body,
+                        modifier = Modifier.fillMaxSize()
+                            .padding(12.dp)
+                    )
+                }
+
             }
         }
-        items.forEach {
-            Text("Saved item: $it")
-        }
+
     }
 }
 
@@ -82,7 +132,9 @@ internal fun SavedDocsScreen(
 @Composable
 private fun DefaultPreview() {
     MyApplicationTheme {
-        SavedDocsScreen(listOf("Pepe", "Room", "Kotlin"), onSave = {})
+        SavedDocsScreen(
+            listOf(DocumentItem("Documento 1", LoremIpsum(50).values.first())),
+            onSave = { _, _ -> })
     }
 }
 
@@ -90,6 +142,8 @@ private fun DefaultPreview() {
 @Composable
 private fun PortraitPreview() {
     MyApplicationTheme {
-        SavedDocsScreen(listOf("Compose", "Room", "Kotlin"), onSave = {})
+        SavedDocsScreen(
+            listOf(DocumentItem("Documento 1", LoremIpsum(50).values.first())),
+            onSave = { _, _ -> })
     }
 }

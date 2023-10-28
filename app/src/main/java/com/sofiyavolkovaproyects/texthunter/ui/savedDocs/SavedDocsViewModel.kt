@@ -19,6 +19,7 @@ package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
+import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
@@ -37,13 +38,13 @@ class SavedDocsViewModel @Inject constructor(
 ) : ViewModel() {
 
     internal val uiState: StateFlow<SavedDocsUiState> = savedDocsRepository
-        .savedDocuments.map<List<String>, SavedDocsUiState>(::Success)
+        .savedDocuments.map<List<DocumentItem>, SavedDocsUiState>(::Success)
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
-    fun addDocument(name: String) {
+    fun addDocument(title: String, body: String) {
         viewModelScope.launch {
-            savedDocsRepository.add(name)
+            savedDocsRepository.add(title, body)
         }
     }
 }
@@ -51,5 +52,5 @@ class SavedDocsViewModel @Inject constructor(
 sealed interface SavedDocsUiState {
     data object Loading : SavedDocsUiState
     data class Error(val throwable: Throwable) : SavedDocsUiState
-    data class Success(val data: List<String>) : SavedDocsUiState
+    data class Success(val data: List<DocumentItem>) : SavedDocsUiState
 }

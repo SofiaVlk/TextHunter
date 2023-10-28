@@ -24,18 +24,19 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Entity
-data class LandingItemType(
-    val name: String
+data class DocumentItem(
+    val title: String,
+    val body: String
 ) {
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0
 }
 
 @Dao
-interface savedDocsDao {
-    @Query("SELECT * FROM landingitemtype ORDER BY uid DESC LIMIT 10")
-    fun getLandingItemTypes(): Flow<List<LandingItemType>>
+interface saveDocDao {
+    @Query("SELECT * FROM documentItem ORDER BY uid DESC LIMIT 10")
+    fun getDocumentItems(): Flow<List<DocumentItem>>
 
     @Insert
-    suspend fun insertLandingItemType(item: LandingItemType)
+    suspend fun insertDocItem(item: DocumentItem)
 }
