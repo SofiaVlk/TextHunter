@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.BottomItemNavData
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Main
@@ -28,13 +29,14 @@ fun BottomNavigationBar(onNavIconClick: (String) -> Unit) {
 
     NavigationBar{
         items.forEachIndexed { index, item ->
+            val data = item.navData as BottomItemNavData
             NavigationBarItem(
-                icon = {  Icon(painter = painterResource(id = item.navData.icon), contentDescription = item.navData.title) },
-                label = { Text(text = item.navData.title) },
+                icon = {  Icon(painter = painterResource(id = data.icon), contentDescription = data.title) },
+                label = { Text(text = data.title) },
                 selected = selectedItem == index,
                 onClick = {
                     selectedItem = index
-                    onNavIconClick(item.createNavRoute(item.navData.icon,item.navData.title))
+                    onNavIconClick(item.route)
                 }
 
             )

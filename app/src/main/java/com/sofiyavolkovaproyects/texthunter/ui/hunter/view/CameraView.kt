@@ -62,8 +62,8 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
     }
 
     CameraPreviewView(
-        imageCapture,
-        lensFacing
+        imageCapture = imageCapture,
+        lensFacing = lensFacing
     ) { cameraUIAction ->
         when (cameraUIAction) {
             is CameraUIAction.OnCameraClick -> {
