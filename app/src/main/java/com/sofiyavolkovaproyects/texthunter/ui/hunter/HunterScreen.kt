@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
@@ -18,34 +19,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.view.CameraView
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
 import java.io.IOException
-import androidx.compose.foundation.layout.Column as Column1
 
 @Composable
-fun HunterScreen(modifier: Modifier = Modifier, viewModel: HunterViewModel = hiltViewModel()) {
+fun HunterScreen(modifier: Modifier = Modifier, viewModel: HunterViewModel = hiltViewModel(), navController: NavController) {
     //val items by viewModel.uiState.collectAsStateWithLifecycle()
     RequiresSimplePermission {
-        HunterScreenView()
+        HunterScreenView(modifier = modifier, navController = navController)
     }
 }
 
 @Composable
-fun HunterScreenView() {
+fun HunterScreenView(modifier: Modifier = Modifier, navController: NavController) {
     val context = LocalContext.current
     // When using Latin script library
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    var openAlertDialog by remember { mutableStateOf(false) }
+   // var openAlertDialog by remember { mutableStateOf(false) }
     var textCaptured by remember {
         mutableStateOf("")
     }
 
-    // ...
+    /*
     when {
         // ...
         openAlertDialog -> {
@@ -61,9 +63,11 @@ fun HunterScreenView() {
         }
     }
 
+     */
 
-    Column1(
-        modifier = Modifier
+
+    Column(
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,8 +88,8 @@ fun HunterScreenView() {
                             // ...
 
                             textCaptured = visionText.text
-                            openAlertDialog = true
-
+                            navController.navigate(EditText.createNavTextRoute(visionText.text))
+                            //openAlertDialog = true
                         }
                         .addOnFailureListener { e ->
                             // Task failed with an exception

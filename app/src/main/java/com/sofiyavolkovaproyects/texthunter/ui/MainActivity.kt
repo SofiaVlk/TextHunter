@@ -20,7 +20,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.sofiyavolkovaproyects.texthunter.ui.components.BottomNavigationBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         BottomNavigationBar { navController.navigate(it) }
                     }
                 ) { padding ->
-                    NavHostContainer(navController, padding)
+                    NavHostContainer(Modifier.padding(padding), navController,)
                 //MainNavigation()
                 }
             }

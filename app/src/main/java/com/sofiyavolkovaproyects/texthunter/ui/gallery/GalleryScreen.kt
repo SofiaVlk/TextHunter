@@ -2,7 +2,6 @@ package com.sofiyavolkovaproyects.texthunter.ui.gallery
 
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.provider.MediaStore.Images
@@ -23,15 +22,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.sofiyavolkovaproyects.texthunter.modelo.Media
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresMediaImagesPermission
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
-fun GalleryScreen(icon: Int, description: String) {
+fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = hiltViewModel()) {
+    //val items by viewModel.uiState.collectAsStateWithLifecycle()
     RequiresMediaImagesPermission {
         val galleryState = remember { mutableStateListOf<Media>() }
 
@@ -46,17 +48,10 @@ fun GalleryScreen(icon: Int, description: String) {
         }
 
         if (galleryState.isNotEmpty()) {
-            PhotoGrid(galleryState)
+            PhotoGrid(photos = galleryState)
         }
     }
 }
-
-data class Media(
-    val uri: Uri,
-    val name: String,
-    val size: Long,
-    val mimeType: String,
-)
 
 // Run the querying logic in a coroutine outside of the main thread to keep the app responsive.
 // Keep in mind that this code snippet is querying only images of the shared storage.
@@ -108,8 +103,9 @@ suspend fun getImages(contentResolver: ContentResolver): List<Media> = withConte
 }
 
 @Composable
-fun PhotoGrid(photos: List<Media>) {
+fun PhotoGrid(modifier: Modifier = Modifier, photos: List<Media>) {
     LazyVerticalGrid(
+        modifier = modifier,
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp)
     ) {
@@ -117,7 +113,8 @@ fun PhotoGrid(photos: List<Media>) {
                 AsyncImage(
                     modifier = Modifier
                         .background(Color.DarkGray)
-                        .fillMaxSize().padding(3.dp),
+                        .fillMaxSize()
+                        .padding(3.dp),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(media.uri)
                         .crossfade(true)

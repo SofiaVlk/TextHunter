@@ -3,22 +3,20 @@ package com.sofiyavolkovaproyects.texthunter.ui.navigation
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.sofiyavolkovaproyects.texthunter.R
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.IconNavArg
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TitleNavArg
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.GalleryNavData
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.HunterNavData
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.MainNavData
-import java.util.*
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.BottomItemNavData
+import java.util.Locale
 
 const val GALLERY_ROUTE = "gallery"
 const val HUNTER_ROUTE = "hunter"
 const val MAIN_ROUTE = "main"
+const val EDIT_TEXT_ROUTE = "editText"
 
 
 sealed class NavigationParams(
     var baseRoute: String,
     private val navArgs: List<NavArg> = emptyList(),
-    val navData: NavData
+    val navData: NavData? = null
 ) {
 
     val route = kotlin.run {
@@ -32,42 +30,36 @@ sealed class NavigationParams(
 
     data object Main : NavigationParams(
         baseRoute = MAIN_ROUTE,
-        navArgs = listOf(
-            IconNavArg,
-            TitleNavArg
-        ),
-        navData = MainNavData
+        navData = BottomItemNavData(R.drawable.ic_profile, MAIN_ROUTE.capitalizeConstant())
     )
     data object Gallery : NavigationParams(
         baseRoute = GALLERY_ROUTE,
-        navArgs = listOf(
-            IconNavArg,
-            TitleNavArg
-        ),
-        navData = GalleryNavData
+        navData = BottomItemNavData(R.drawable.ic_home, GALLERY_ROUTE.capitalizeConstant())
     )
 
     data object Hunter : NavigationParams(
         baseRoute = HUNTER_ROUTE,
-        navArgs = listOf(
-            IconNavArg,
-            TitleNavArg
-        ), navData = HunterNavData
+        navData = BottomItemNavData(R.drawable.ic_search, HUNTER_ROUTE.capitalizeConstant())
     )
 
-    fun createNavRoute(icon: Int, title: String) = "$baseRoute/$icon/$title"
+    data object EditText: NavigationParams(
+        baseRoute = EDIT_TEXT_ROUTE,
+        navArgs = listOf(TextNavArg),
+    )
+
+    fun createNavBottomRoute(icon: Int, title: String) = "$baseRoute/$icon/$title"
+    fun createNavTextRoute(text:String) = "$baseRoute/$text"
 
 }
 
 enum class NavArg(val key: String, val navType: NavType<*>) {
     IconNavArg("icon", NavType.IntType),
-    TitleNavArg("title", NavType.StringType)
+    TitleNavArg("title", NavType.StringType),
+    TextNavArg("text", NavType.StringType)
 }
 
-sealed class NavData(val icon: Int, val title: String) {
-    data object GalleryNavData : NavData(R.drawable.ic_home, GALLERY_ROUTE.capitalizeConstant())
-    data object HunterNavData : NavData(R.drawable.ic_search, HUNTER_ROUTE.capitalizeConstant())
-    data object MainNavData : NavData(R.drawable.ic_profile, MAIN_ROUTE.capitalizeConstant())
+sealed class NavData {
+    data class BottomItemNavData(val icon: Int, val title: String) : NavData()
 }
 
 fun String.capitalizeConstant() = replaceFirstChar {

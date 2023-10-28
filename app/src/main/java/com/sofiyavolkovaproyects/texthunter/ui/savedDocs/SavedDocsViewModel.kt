@@ -23,13 +23,13 @@ import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class SavedDocsViewModel @Inject constructor(
@@ -37,7 +37,8 @@ class SavedDocsViewModel @Inject constructor(
 ) : ViewModel() {
 
     internal val uiState: StateFlow<SavedDocsUiState> = savedDocsRepository
-        .savedDocuments.map<List<String>, SavedDocsUiState>(::Success)
+        .savedDocuments
+        .map<List<String>, SavedDocsUiState> { list -> Success(list) }
         .catch { emit(Error(it)) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
 
