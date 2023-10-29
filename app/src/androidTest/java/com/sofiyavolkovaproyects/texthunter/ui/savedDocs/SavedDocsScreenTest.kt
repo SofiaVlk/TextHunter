@@ -38,7 +38,7 @@ class SavedDocsScreenTest {
     @Before
     fun setup() {
         composeTestRule.setContent {
-            SavedDocsScreen(FAKE_DATA, onSave = {})
+            SavedDocsScreen()
         }
     }
 
