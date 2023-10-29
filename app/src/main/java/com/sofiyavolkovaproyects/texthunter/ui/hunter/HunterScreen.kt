@@ -47,6 +47,8 @@ fun HunterScreenView(modifier: Modifier = Modifier, navController: NavController
         mutableStateOf("")
     }
 
+    var openAlertDialog by remember { mutableStateOf(false) }
+
     /*
     when {
         // ...
