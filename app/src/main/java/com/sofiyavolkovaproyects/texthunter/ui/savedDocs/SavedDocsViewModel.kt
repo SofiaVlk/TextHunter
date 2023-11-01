@@ -24,11 +24,14 @@ import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,10 +40,18 @@ class SavedDocsViewModel @Inject constructor(
     private val savedDocsRepository: DocumentsRepository
 ) : ViewModel() {
 
-    internal val uiState: StateFlow<SavedDocsUiState> = savedDocsRepository
-        .savedDocuments.map<List<DocumentItem>, SavedDocsUiState>(::Success)
-        .catch { emit(Error(it)) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
+    internal var uiState: StateFlow<SavedDocsUiState> = MutableStateFlow(Loading)
+
+    init {
+        viewModelScope.launch {
+            uiState = savedDocsRepository.getSavedDocuments()
+                .mapper<List<DocumentItem>, SavedDocsUiState> { documentItemList ->
+                    Success(documentItemList)
+                }
+                .catch { emit(Error(it)) }
+                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
+        }
+    }
 
     fun addDocument(title: String, body: String) {
         viewModelScope.launch {
@@ -53,4 +64,9 @@ sealed interface SavedDocsUiState {
     data object Loading : SavedDocsUiState
     data class Error(val throwable: Throwable) : SavedDocsUiState
     data class Success(val data: List<DocumentItem>) : SavedDocsUiState
+}
+
+public inline fun <T, R> Flow<T>.mapper(crossinline transform: suspend (value: T) -> R): Flow<R> = transform { value ->
+    delay(1000)
+    return@transform emit(transform(value))
 }

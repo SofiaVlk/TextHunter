@@ -15,7 +15,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TitleNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Main
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsScreen
 
 @Composable
@@ -26,19 +26,23 @@ fun NavHostContainer(
 
     NavHost(
         navController = navController,
-        startDestination = Main.route,
+        startDestination = Storage.route,
         modifier = modifier,
         builder = {
 
-            composable(route = Main.route) { SavedDocsScreen(modifier = modifier) }
+            val navigator: (String) -> Unit = { navController.navigate(it) }
+
+            composable(route = Storage.route) { SavedDocsScreen(modifier = modifier) }
 
             composable(route = Gallery.route) { GalleryScreen(modifier) }
 
-            composable(route = Hunter.route) { HunterScreen(modifier, navController = navController) }
+            composable(route = Hunter.route) {
+                HunterScreen(navigateTo = navigator)
+            }
 
             composable(route = EditText.route, arguments = EditText.args) {
                 val text = it.arguments?.getString(TextNavArg.key, "") ?: ""
-                EditTextScreen(modifier,text = text)
+                EditTextScreen(modifier,text = text, navigateTo = navigator)
             }
         }
     )

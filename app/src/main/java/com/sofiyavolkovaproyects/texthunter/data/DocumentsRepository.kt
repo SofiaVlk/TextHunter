@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface DocumentsRepository {
-    val savedDocuments: Flow<List<DocumentItem>>
+    suspend fun getSavedDocuments() : Flow<List<DocumentItem>>
 
     suspend fun add(title: String, body: String)
 }
@@ -31,8 +31,10 @@ class DefaultDocumentsRepository @Inject constructor(
     private val docsItemTypeDao: saveDocDao
 ) : DocumentsRepository {
 
-    override val savedDocuments: Flow<List<DocumentItem>> =
-        docsItemTypeDao.getDocumentItems()
+    override suspend fun getSavedDocuments(): Flow<List<DocumentItem>> {
+        return docsItemTypeDao.getDocumentItems()
+    }
+
 
     override suspend fun add(title: String, body: String) {
         docsItemTypeDao.insertDocItem(DocumentItem(title = title, body = body))

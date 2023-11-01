@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -27,21 +26,21 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditT
 import java.io.IOException
 
 @Composable
-fun HunterScreen(modifier: Modifier = Modifier, viewModel: HunterViewModel = hiltViewModel(), navController: NavController) {
+fun HunterScreen(modifier: Modifier = Modifier, viewModel: HunterViewModel = hiltViewModel(), navigateTo: (String) ->Unit = {}) {
     //val items by viewModel.uiState.collectAsStateWithLifecycle()
     RequiresSimplePermission {
-        HunterScreenView(modifier = modifier, navController = navController)
+        HunterScreenView(modifier = modifier, navigateTo)
     }
 }
 
 @Composable
-fun HunterScreenView(modifier: Modifier = Modifier, navController: NavController) {
+fun HunterScreenView(modifier: Modifier = Modifier, navigateTo: (String) ->Unit) {
     val context = LocalContext.current
     // When using Latin script library
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
    // var openAlertDialog by remember { mutableStateOf(false) }
-    var textCaptured by remember {mutableStateOf("")    }
+    var textCaptured by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -58,21 +57,19 @@ fun HunterScreenView(modifier: Modifier = Modifier, navController: NavController
                 try {
                     image = InputImage.fromFilePath(context, uri)
 
-                    var result = recognizer.process(image)
+                    val result = recognizer.process(image)
                         .addOnSuccessListener { visionText ->
                             // Task completed successfully
                             // ...
                             uri.toFile().delete()
 
                             textCaptured = visionText.text
-                            navController.navigate(EditText.createNavTextRoute(visionText.text))
-                            //openAlertDialog = true
+                            navigateTo(EditText.createNavTextRoute(textCaptured))
                         }
                         .addOnFailureListener { e ->
                             // Task failed with an exception
                             // ...
                         }
-
 
                 } catch (e: IOException) {
                     e.printStackTrace()

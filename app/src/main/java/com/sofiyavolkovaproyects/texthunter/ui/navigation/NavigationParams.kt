@@ -5,11 +5,11 @@ import androidx.navigation.navArgument
 import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.BottomItemNavData
-import java.util.Locale
+import java.util.*
 
 const val GALLERY_ROUTE = "gallery"
 const val HUNTER_ROUTE = "hunter"
-const val MAIN_ROUTE = "main"
+const val STORAGE_ROUTE = "storage"
 const val EDIT_TEXT_ROUTE = "editText"
 
 
@@ -28,9 +28,9 @@ sealed class NavigationParams(
         navArgument(it.key) { type = it.navType }
     }
 
-    data object Main : NavigationParams(
-        baseRoute = MAIN_ROUTE,
-        navData = BottomItemNavData(R.drawable.ic_profile, MAIN_ROUTE.capitalizeConstant())
+    data object Storage : NavigationParams(
+        baseRoute = STORAGE_ROUTE,
+        navData = BottomItemNavData(R.drawable.ic_profile, STORAGE_ROUTE.capitalizeConstant())
     )
     data object Gallery : NavigationParams(
         baseRoute = GALLERY_ROUTE,

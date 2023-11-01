@@ -5,19 +5,27 @@ import android.content.ContentUris
 import android.os.Build
 import android.provider.MediaStore
 import android.provider.MediaStore.Images
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -48,7 +56,9 @@ fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = h
         }
 
         if (galleryState.isNotEmpty()) {
-            PhotoGrid(photos = galleryState)
+            PhotoGrid(photos = galleryState, onClickItem = {
+
+            })
         }
     }
 }
@@ -72,7 +82,7 @@ suspend fun getImages(contentResolver: ContentResolver): List<Media> = withConte
 
     val selection = Images.Media.MIME_TYPE + "=? AND " + Images.Media.SIZE + ">?"
 
-    val selectionArgs = arrayOf("image/jpeg","800000")
+    val selectionArgs = arrayOf("image/jpeg", "800000")
 
     val images = mutableListOf<Media>()
 
@@ -103,25 +113,45 @@ suspend fun getImages(contentResolver: ContentResolver): List<Media> = withConte
 }
 
 @Composable
-fun PhotoGrid(modifier: Modifier = Modifier, photos: List<Media>) {
+fun PhotoGrid(
+    modifier: Modifier = Modifier,
+    photos: List<Media>,
+    borderColor: Color = MaterialTheme.colorScheme.background,
+    onClickItem: (Media) -> Unit = {}
+) {
+    var borderCl by remember { mutableStateOf(borderColor) }
+    val primaryColor = MaterialTheme.colorScheme.primary
+    var itemSelected by remember { mutableStateOf("") }
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = PaddingValues(12.dp),
     ) {
+
         items(photos) { media ->
                 AsyncImage(
-                    modifier = Modifier
-                        .background(Color.DarkGray)
-                        .fillMaxSize()
-                        .padding(3.dp),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(media.uri)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = media.name,
-                    contentScale = ContentScale.Fit
-                )
-            }
+                modifier = Modifier
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(5))
+                    .border(
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = if (itemSelected == media.name) primaryColor else borderColor
+                        ),
+                        shape = RoundedCornerShape(5)
+                    )
+                    .height(250.dp)
+                    .clickable {
+                        onClickItem(media)
+                        itemSelected = media.name
+                    },
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(media.uri)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = media.name,
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }

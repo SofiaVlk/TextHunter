@@ -9,11 +9,9 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -34,20 +32,23 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.FileReader
 import java.io.FileWriter
-import java.util.Locale
-import kotlinx.coroutines.launch
+import java.util.*
 
 
 @Composable
 internal fun EditTextScreen(
     modifier: Modifier = Modifier,
     viewModel: EditTextViewModel = hiltViewModel(),
-    text: String
+    text: String,
+    navigateTo: (String) -> Unit
 ) {
     // val items by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -55,7 +56,8 @@ internal fun EditTextScreen(
 
     val context = LocalContext.current
     var fileName = ""
-    var openAlertDialog by remember { mutableStateOf(false) }
+    var openAlertDialogExportDoc by remember { mutableStateOf(false) }
+    var openAlertDialogSaveDoc by remember { mutableStateOf(false) }
     var textState by remember { mutableStateOf(text) }
     var dialogText by remember { mutableStateOf("Introduce el nombre del documento de texto. \n ejemplo: NombreDoc.txt") }
     val scope = rememberCoroutineScope()
@@ -75,16 +77,24 @@ internal fun EditTextScreen(
                     .height(400.dp)
             )
         }
-        Row(modifier = Modifier.padding(12.dp))
+        Row(
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        )
         {
             ButtonBasic(
                 text = "Guardar",
                 onClick = {
-                    openAlertDialog = true;
+                    openAlertDialogSaveDoc = true
                 }
             )
 
-            Spacer(modifier = Modifier.size(12.dp))
+            ButtonBasic(
+                text = "Exportar",
+                onClick = {
+                    openAlertDialogExportDoc = true;
+                }
+            )
 
             ButtonBasic(
                 text = "Descartar",
@@ -95,46 +105,33 @@ internal fun EditTextScreen(
     }
 
     when {
-        openAlertDialog -> {
+        openAlertDialogExportDoc -> {
             RequiresSimplePermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) {
-                AlertDialogExportTxt(
-                    onDismissRequest = { openAlertDialog = false },
+                AddTitleAlertDialog(
+                    onDismissRequest = { openAlertDialogExportDoc = false },
                     onConfirmation = {
-                        if (fileName.isNotEmpty() && !fileName.contentEquals(" ") && fileName.lowercase(
-                                Locale.getDefault()
-                            ).endsWith(".txt")
-                        ) {
-
-                            val result = writeFileOnInternalStorage(
-                                context,
-                                sTitle = fileName,
-                                sBody = textState
-                            )
-                            if (result) {
-                                /*
-                                Toast.makeText(
-                                    context,
-                                    "Documento guardado con éxito",
-                                    Toast.LENGTH_LONG
-                                ).show()
-
-                                 */
-
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                        if (copyFile(context, fileName)) {
-                                            "Fichero guardado con exito en Download"
-                                        } else {
-                                            "Algo fue mal al crear el documento"
-                                        }
-                                    )
-                                }
-
-                                openAlertDialog = false
+                        openAlertDialogExportDoc = false
+                        onDialogExportConfirmationClicked(
+                            fileName = fileName,
+                            context = context,
+                            textState = textState,
+                            onSuccess = { isSuccess ->
+                                LaunchSnackBar(
+                                    text = if (isSuccess) {
+                                        "Fichero guardado con exito en Download"
+                                    } else {
+                                        "Algo fue mal al crear el documento"
+                                    },
+                                    scope = scope,
+                                    snackBarHostState = snackbarHostState
+                                )
+                                openAlertDialogExportDoc = false
+                            },
+                            onError = {
+                                dialogText = "Introduce un nombre válido para el documento."
+                                openAlertDialogExportDoc = true
                             }
-                        } else {
-                            dialogText = "Introduce un nombre válido para el documento."
-                        }
+                        )
                     },
                     dialogTitle = "Nombre del documento",
                     dialogText = dialogText,
@@ -142,10 +139,57 @@ internal fun EditTextScreen(
                 )
             }
         }
+
+        openAlertDialogSaveDoc ->
+            AddTitleAlertDialog(
+                onDismissRequest = { openAlertDialogSaveDoc = false },
+                onConfirmation = {
+                    openAlertDialogSaveDoc = false
+                    viewModel.addDocument(fileName, text)
+                    navigateTo(Storage.route)
+                },
+                dialogTitle = "Titulo.",
+                dialogText = "Añade un titulo para el texto.",
+                onValueChange = { name -> fileName = name }
+            )
     }
 
     SnackbarHost(hostState = snackbarHostState)
 
+}
+
+private fun LaunchSnackBar(
+    text: String,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+) {
+    scope.launch {
+        snackBarHostState.showSnackbar(text)
+    }
+}
+
+private fun onDialogExportConfirmationClicked(
+    fileName: String,
+    context: Context,
+    textState: String,
+    onSuccess: (Boolean) -> Unit,
+    onError: () -> Unit
+) {
+    if (fileName.isNotEmpty() && !fileName.contentEquals(" ") && fileName.lowercase(
+            Locale.getDefault()
+        ).endsWith(".txt")
+    ) {
+        val result = writeFileOnInternalStorage(
+            context,
+            sTitle = fileName,
+            sBody = textState
+        )
+        if (result) {
+            onSuccess(copyFile(context, fileName))
+        }
+    } else {
+        onError.invoke()
+    }
 }
 
 //escribir
@@ -187,7 +231,7 @@ fun readFileOnInternalStorage(context: Context, fileName: String): String {
 
 
 @Composable
-private fun AlertDialogExportTxt(
+private fun AddTitleAlertDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     dialogTitle: String,
@@ -287,5 +331,5 @@ private fun copyFile(context: Context, fileName: String): Boolean {
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
-    EditTextScreen(text = LoremIpsum(200).values.first().toString())
+    EditTextScreen(text = LoremIpsum(200).values.first().toString(), navigateTo = {})
 }

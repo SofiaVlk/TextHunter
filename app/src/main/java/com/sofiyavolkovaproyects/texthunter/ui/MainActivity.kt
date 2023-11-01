@@ -22,11 +22,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sofiyavolkovaproyects.texthunter.ui.components.BottomNavigationBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavHostContainer
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,16 +42,21 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route ?: ""
+
 
             TextHunterApp {
                 Scaffold(
-                    topBar = { MainAppBar(true) },
+                    topBar = { MainAppBar(currentRoute != Storage.route) {
+                        navController.popBackStack()
+                    }
+                             },
                     bottomBar = {
                         BottomNavigationBar { navController.navigate(it) }
                     }
                 ) { padding ->
                     NavHostContainer(Modifier.padding(padding), navController,)
-                //MainNavigation()
                 }
             }
         }

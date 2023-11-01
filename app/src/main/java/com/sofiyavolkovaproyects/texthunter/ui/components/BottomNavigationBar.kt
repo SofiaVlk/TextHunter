@@ -13,7 +13,7 @@ import androidx.compose.ui.res.painterResource
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.BottomItemNavData
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Main
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
 
 
 @Composable
@@ -22,7 +22,7 @@ fun BottomNavigationBar(onNavIconClick: (String) -> Unit) {
     var selectedItem by remember { mutableIntStateOf(0) }
 
     val items = listOf(
-        Main,
+        Storage,
         Gallery,
         Hunter
     )

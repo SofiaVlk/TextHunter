@@ -17,16 +17,26 @@
 package com.sofiyavolkovaproyects.texthunter.ui.edittext
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class EditTextViewModel @Inject constructor(
+    private val savedDocsRepository: DocumentsRepository
 ) : ViewModel() {
 
     //val uiState: StateFlow<HunterUiState> =
-
+    fun addDocument(title: String, body: String) {
+        viewModelScope.launch {
+            savedDocsRepository.add(title, body)
+        }
+    }
 }
+
+
 
 sealed interface EditTextUiState {
     data object Loading : EditTextUiState

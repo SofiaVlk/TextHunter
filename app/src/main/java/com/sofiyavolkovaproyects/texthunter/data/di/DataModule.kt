@@ -41,7 +41,7 @@ interface DataModule {
 }
 
 class FakeDocumentsRepository @Inject constructor() : DocumentsRepository {
-    override val savedDocuments: Flow<List<DocumentItem>> = flowOf(fakeDocumentsItemList)
+    override suspend fun getSavedDocuments(): Flow<List<DocumentItem>> = flowOf(fakeDocumentsItemList)
 
     override suspend fun add(title: String, body: String) {
         throw NotImplementedError()

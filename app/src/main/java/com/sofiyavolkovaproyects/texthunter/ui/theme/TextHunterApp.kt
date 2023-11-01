@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun TextHunterApp(content: @Composable () -> Unit) {
-    MyApplicationTheme {
+    THTheme {
         Surface(color = MaterialTheme.colorScheme.background){
             content()
         }
