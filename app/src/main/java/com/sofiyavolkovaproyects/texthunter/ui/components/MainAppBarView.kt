@@ -2,34 +2,43 @@ package com.sofiyavolkovaproyects.texthunter.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import com.sofiyavolkovaproyects.texthunter.R
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.capitalizeConstant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainAppBar(
-    navigationAvailable: Boolean = false,
+    currentRoute: String,
+    mainRoute: String,
     onClick: () -> Unit = {}
 ) {
-    TopAppBar(
+
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            navigationIconContentColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.background,
+            actionIconContentColor = MaterialTheme.colorScheme.background,
+            scrolledContainerColor = MaterialTheme.colorScheme.secondary
+        ),
         title = {
             Text(
-                text = stringResource(id = R.string.app_name),
+                text = currentRoute.substringBefore("/").capitalizeConstant(),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center
             )
         },
         navigationIcon = {
-            if (navigationAvailable) {
+            if (currentRoute != mainRoute) {
                 AppbarAction(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     onClick = onClick

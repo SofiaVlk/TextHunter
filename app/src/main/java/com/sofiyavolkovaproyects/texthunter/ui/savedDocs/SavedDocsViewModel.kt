@@ -52,12 +52,6 @@ class SavedDocsViewModel @Inject constructor(
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
         }
     }
-
-    fun addDocument(title: String, body: String) {
-        viewModelScope.launch {
-            savedDocsRepository.add(title, body)
-        }
-    }
 }
 
 sealed interface SavedDocsUiState {

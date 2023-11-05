@@ -35,7 +35,6 @@ class DefaultDocumentsRepository @Inject constructor(
         return docsItemTypeDao.getDocumentItems()
     }
 
-
     override suspend fun add(title: String, body: String) {
         docsItemTypeDao.insertDocItem(DocumentItem(title = title, body = body))
     }

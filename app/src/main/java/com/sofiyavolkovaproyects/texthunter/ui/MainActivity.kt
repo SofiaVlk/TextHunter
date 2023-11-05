@@ -45,22 +45,20 @@ class MainActivity : ComponentActivity() {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
-
             TextHunterApp {
                 Scaffold(
-                    topBar = { MainAppBar(currentRoute != Storage.route) {
-                        navController.popBackStack()
-                    }
-                             },
+                    topBar = {
+                        MainAppBar(currentRoute = currentRoute, mainRoute = Storage.route) {
+                            navController.popBackStack()
+                        }
+                    },
                     bottomBar = {
-                        BottomNavigationBar { navController.navigate(it) }
+                        BottomNavigationBar(currentRoute) { navController.navigate(it) }
                     }
                 ) { padding ->
-                    NavHostContainer(Modifier.padding(padding), navController,)
+                    NavHostContainer(Modifier.padding(padding), navController)
                 }
             }
         }
     }
 }
-
-

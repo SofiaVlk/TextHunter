@@ -36,14 +36,17 @@ class DefaultTHLocalImageSource @Inject constructor(
     private suspend fun getImages(context: Context): Flow<List<Media>> = flow {
         val collectionUri = context.getOutputDirectory().listFiles()
 
-        emit(collectionUri.map {
-            Media(
-                uri = it.toUri(),
-                name = it.nameWithoutExtension,
-                size = it.totalSpace,
-                mimeType = "image/jpeg"
-            )
-        })
+        collectionUri?.let { uriList ->
+            emit(uriList.mapNotNull {
+                Media(
+                    uri = it.toUri(),
+                    name = it.nameWithoutExtension,
+                    size = it.totalSpace,
+                    mimeType = "image/jpeg"
+                )
+            })
+        }
+
     }.flowOn(ioDispatcher)
 
 }

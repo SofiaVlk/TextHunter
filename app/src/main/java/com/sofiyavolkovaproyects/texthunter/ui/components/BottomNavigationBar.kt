@@ -17,7 +17,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Stora
 
 
 @Composable
-fun BottomNavigationBar(onNavIconClick: (String) -> Unit) {
+fun BottomNavigationBar(currentRoute: String, onNavIconClick: (String) -> Unit) {
 
     var selectedItem by remember { mutableIntStateOf(0) }
 
@@ -33,7 +33,7 @@ fun BottomNavigationBar(onNavIconClick: (String) -> Unit) {
             NavigationBarItem(
                 icon = {  Icon(painter = painterResource(id = data.icon), contentDescription = data.title) },
                 label = { Text(text = data.title) },
-                selected = selectedItem == index,
+                selected = currentRoute == item.route,
                 onClick = {
                     selectedItem = index
                     onNavIconClick(item.route)

@@ -6,13 +6,16 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -24,12 +27,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Modifier.Companion
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sofiyavolkovaproyects.texthunter.R.drawable
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
@@ -62,27 +72,44 @@ internal fun EditTextScreen(
     var dialogText by remember { mutableStateOf("Introduce el nombre del documento de texto. \n ejemplo: NombreDoc.txt") }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    Column(modifier) {
-
-        Row(
+    Column(
+        modifier = Modifier.padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .clip(RoundedCornerShape(4.dp)),
+            contentAlignment = Alignment.Center
         ) {
-            TextField(
-                value = textState,
-                onValueChange = { textChanged -> textState = textChanged },
+            Image(
                 modifier = Modifier
-                    .padding(12.dp)
                     .fillMaxWidth()
-                    .height(400.dp)
+                    .height(60.dp),
+                painter = painterResource(id = drawable.card_background_01),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth
+            )
+            Text(
+                modifier = Companion.fillMaxWidth(),
+                text = "Titulo del Documento",
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.background,
+                textAlign = TextAlign.Center
             )
         }
-        Row(
-            modifier = Modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+        TextField(
+            value = textState,
+            onValueChange = { textChanged -> textState = textChanged },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(3f)
         )
-        {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
             ButtonBasic(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Guardar",
                 onClick = {
                     openAlertDialogSaveDoc = true
@@ -90,15 +117,11 @@ internal fun EditTextScreen(
             )
 
             ButtonBasic(
+                modifier = Modifier.fillMaxWidth(),
                 text = "Exportar",
                 onClick = {
                     openAlertDialogExportDoc = true;
                 }
-            )
-
-            ButtonBasic(
-                text = "Descartar",
-                onClick = { }
             )
         }
 

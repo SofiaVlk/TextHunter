@@ -49,17 +49,16 @@ fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = h
 
 @Composable
 fun PhotoGrid(
-    modifier: Modifier = Modifier,
     photos: List<Media>,
+    modifier: Modifier = Modifier,
     borderColor: Color = MaterialTheme.colorScheme.background,
     onClickItem: (Media) -> Unit = {}
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     var itemSelected by remember { mutableStateOf("") }
     LazyVerticalGrid(
-        modifier = modifier,
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = PaddingValues(7.dp),
     ) {
 
         items(photos) { media ->
@@ -69,8 +68,8 @@ fun PhotoGrid(
                     .clip(RoundedCornerShape(5))
                     .border(
                         border = BorderStroke(
-                            width = 1.dp,
-                            color = if (itemSelected == media.name) primaryColor else borderColor
+                            width = 5.dp,
+                            color = if (itemSelected == media.name) primaryColor else Color.Transparent
                         ),
                         shape = RoundedCornerShape(5)
                     )

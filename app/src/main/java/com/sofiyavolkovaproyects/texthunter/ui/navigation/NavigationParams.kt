@@ -12,7 +12,6 @@ const val HUNTER_ROUTE = "hunter"
 const val STORAGE_ROUTE = "storage"
 const val EDIT_TEXT_ROUTE = "editText"
 
-
 sealed class NavigationParams(
     var baseRoute: String,
     private val navArgs: List<NavArg> = emptyList(),
@@ -30,32 +29,31 @@ sealed class NavigationParams(
 
     data object Storage : NavigationParams(
         baseRoute = STORAGE_ROUTE,
-        navData = BottomItemNavData(R.drawable.ic_profile, STORAGE_ROUTE.capitalizeConstant())
+        navData = BottomItemNavData(R.drawable.ic_text_snippet_24, STORAGE_ROUTE.capitalizeConstant())
     )
+
     data object Gallery : NavigationParams(
         baseRoute = GALLERY_ROUTE,
-        navData = BottomItemNavData(R.drawable.ic_home, GALLERY_ROUTE.capitalizeConstant())
+        navData = BottomItemNavData(R.drawable.ic_gallery_24, GALLERY_ROUTE.capitalizeConstant())
     )
 
     data object Hunter : NavigationParams(
         baseRoute = HUNTER_ROUTE,
-        navData = BottomItemNavData(R.drawable.ic_search, HUNTER_ROUTE.capitalizeConstant())
+        navData = BottomItemNavData(R.drawable.ic_camera_enhance_24, HUNTER_ROUTE.capitalizeConstant())
     )
 
-    data object EditText: NavigationParams(
+    data object EditText : NavigationParams(
         baseRoute = EDIT_TEXT_ROUTE,
         navArgs = listOf(TextNavArg),
     )
-
-    fun createNavBottomRoute(icon: Int, title: String) = "$baseRoute/$icon/$title"
-    fun createNavTextRoute(text:String) = "$baseRoute/$text"
+    fun createNavTextRoute(text: String) = "$baseRoute/$text"
 
 }
 
 enum class NavArg(val key: String, val navType: NavType<*>) {
-    IconNavArg("icon", NavType.IntType),
-    TitleNavArg("title", NavType.StringType),
-    TextNavArg("text", NavType.StringType)
+    IconNavArg(key = "icon", NavType.IntType),
+    TitleNavArg(key = "title", NavType.StringType),
+    TextNavArg(key = "text", NavType.StringType)
 }
 
 sealed class NavData {

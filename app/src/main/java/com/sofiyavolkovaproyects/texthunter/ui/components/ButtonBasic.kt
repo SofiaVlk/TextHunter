@@ -41,7 +41,7 @@ internal fun ButtonBasic(
                     contentDescription = null
                 )
             }
-            Text( modifier = Modifier.padding(horizontal = 10.dp),
+            Text( modifier = Modifier.padding(horizontal = 16.dp),
                 text = text)
         }
     }

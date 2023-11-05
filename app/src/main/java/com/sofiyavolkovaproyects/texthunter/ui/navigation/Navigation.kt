@@ -2,16 +2,13 @@ package com.sofiyavolkovaproyects.texthunter.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sofiyavolkovaproyects.texthunter.ui.edittext.EditTextScreen
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryScreen
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.HunterScreen
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.IconNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
-import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TitleNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
@@ -32,13 +29,11 @@ fun NavHostContainer(
 
             val navigator: (String) -> Unit = { navController.navigate(it) }
 
-            composable(route = Storage.route) { SavedDocsScreen(modifier = modifier) }
+            composable(route = Storage.route) { SavedDocsScreen(modifier = modifier, navigateTo = navigator) }
 
-            composable(route = Gallery.route) { GalleryScreen(modifier) }
+            composable(route = Gallery.route) { GalleryScreen(modifier = modifier) }
 
-            composable(route = Hunter.route) {
-                HunterScreen(navigateTo = navigator)
-            }
+            composable(route = Hunter.route) { HunterScreen(modifier = modifier, navigateTo = navigator) }
 
             composable(route = EditText.route, arguments = EditText.args) {
                 val text = it.arguments?.getString(TextNavArg.key, "") ?: ""
@@ -46,11 +41,4 @@ fun NavHostContainer(
             }
         }
     )
-}
-
-internal fun NavBackStackEntry.getArguments(): Pair<Int?, String?> {
-    val icon = this.arguments?.getInt(IconNavArg.key)
-    val title = this.arguments?.getString(TitleNavArg.key, "")
-    val text = this.arguments?.getString(TextNavArg.key, "")
-    return Pair(icon, title)
 }

@@ -19,9 +19,9 @@ internal fun CustomCircularProgressBar() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         CircularProgressIndicator(
-            modifier = Modifier.size(100.dp),
+            modifier = Modifier.size(80.dp),
             color = MaterialTheme.colorScheme.primary,
-            strokeWidth = 10.dp
+            strokeWidth = 6.dp
         )
     }
 }
