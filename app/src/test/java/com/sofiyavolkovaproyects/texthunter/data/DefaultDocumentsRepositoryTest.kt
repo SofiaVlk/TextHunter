@@ -17,7 +17,7 @@
 package com.sofiyavolkovaproyects.texthunter.data
 
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
-import com.sofiyavolkovaproyects.texthunter.data.local.database.saveDocDao
+import com.sofiyavolkovaproyects.texthunter.data.local.database.SaveDocDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -41,7 +41,7 @@ class DefaultDocumentsRepositoryTest {
 
 }
 
-private class FakeLandingItemTypeDao : saveDocDao {
+private class FakeLandingItemTypeDao : SaveDocDao {
 
     private val data = mutableListOf<DocumentItem>()
 

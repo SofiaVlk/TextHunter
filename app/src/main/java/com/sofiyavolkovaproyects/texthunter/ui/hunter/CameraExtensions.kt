@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
 import com.sofiyavolkovaproyects.texthunter.R
 import java.io.File
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -100,9 +100,9 @@ private fun formatDate(format: String) =
     }
 
 fun Context.getOutputDirectory(): File {
-    val mediaDir = this.externalMediaDirs.firstOrNull()?.let {
+            val mediaDir = this.externalMediaDirs.firstOrNull()?.let {
         File(it, this.resources.getString(R.string.app_name)).apply { mkdirs() }
     }
     return if (mediaDir != null && mediaDir.exists())
-        mediaDir else this.filesDir
+        mediaDir else File(this.filesDir, "images")
 }

@@ -16,10 +16,16 @@
 
 package com.sofiyavolkovaproyects.texthunter.data.local.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
-@Database(entities = [DocumentItem::class], version = 1)
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun docsItemTypeDao(): SaveDocDao
+@Dao
+interface SaveDocDao {
+    @Query("SELECT * FROM documentItem ORDER BY uid DESC LIMIT 10")
+    fun getDocumentItems(): Flow<List<DocumentItem>>
+
+    @Insert
+    suspend fun insertDocItem(item: DocumentItem)
 }

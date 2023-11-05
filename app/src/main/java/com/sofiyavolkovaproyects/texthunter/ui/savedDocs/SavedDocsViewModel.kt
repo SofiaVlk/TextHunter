@@ -66,7 +66,7 @@ sealed interface SavedDocsUiState {
     data class Success(val data: List<DocumentItem>) : SavedDocsUiState
 }
 
-public inline fun <T, R> Flow<T>.mapper(crossinline transform: suspend (value: T) -> R): Flow<R> = transform { value ->
+inline fun <T, R> Flow<T>.mapper(crossinline transform: suspend (value: T) -> R): Flow<R> = transform { value ->
     delay(1000)
     return@transform emit(transform(value))
 }

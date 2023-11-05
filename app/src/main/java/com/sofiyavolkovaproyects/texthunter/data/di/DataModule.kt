@@ -18,7 +18,9 @@ package com.sofiyavolkovaproyects.texthunter.data.di
 
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import com.sofiyavolkovaproyects.texthunter.data.DefaultDocumentsRepository
+import com.sofiyavolkovaproyects.texthunter.data.DefaultImagesRepository
 import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
+import com.sofiyavolkovaproyects.texthunter.data.ImagesRepository
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import dagger.Binds
 import dagger.Module
@@ -38,6 +40,14 @@ interface DataModule {
     fun bindsDocumentsRepository(
         documentsRepository: DefaultDocumentsRepository
     ): DocumentsRepository
+
+    @Singleton
+    @Binds
+    fun bindsImagesRepository(
+        documentsRepository: DefaultImagesRepository
+    ): ImagesRepository
+
+
 }
 
 class FakeDocumentsRepository @Inject constructor() : DocumentsRepository {

@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -61,7 +60,6 @@ fun HunterScreenView(modifier: Modifier = Modifier, navigateTo: (String) ->Unit)
                         .addOnSuccessListener { visionText ->
                             // Task completed successfully
                             // ...
-                            uri.toFile().delete()
 
                             textCaptured = visionText.text
                             navigateTo(EditText.createNavTextRoute(textCaptured))
@@ -70,6 +68,7 @@ fun HunterScreenView(modifier: Modifier = Modifier, navigateTo: (String) ->Unit)
                             // Task failed with an exception
                             // ...
                         }
+
 
                 } catch (e: IOException) {
                     e.printStackTrace()

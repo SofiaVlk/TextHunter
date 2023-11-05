@@ -17,7 +17,7 @@
 package com.sofiyavolkovaproyects.texthunter.data
 
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
-import com.sofiyavolkovaproyects.texthunter.data.local.database.saveDocDao
+import com.sofiyavolkovaproyects.texthunter.data.local.database.SaveDocDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ interface DocumentsRepository {
 }
 
 class DefaultDocumentsRepository @Inject constructor(
-    private val docsItemTypeDao: saveDocDao
+    private val docsItemTypeDao: SaveDocDao
 ) : DocumentsRepository {
 
     override suspend fun getSavedDocuments(): Flow<List<DocumentItem>> {

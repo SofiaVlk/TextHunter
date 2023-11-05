@@ -19,12 +19,17 @@ package com.sofiyavolkovaproyects.texthunter.data.local.di
 import android.content.Context
 import androidx.room.Room
 import com.sofiyavolkovaproyects.texthunter.data.local.database.AppDatabase
-import com.sofiyavolkovaproyects.texthunter.data.local.database.saveDocDao
+import com.sofiyavolkovaproyects.texthunter.data.local.database.SaveDocDao
+import com.sofiyavolkovaproyects.texthunter.data.local.source.DefaultTHLocalImageSource
+import com.sofiyavolkovaproyects.texthunter.data.local.source.THLocalImageSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 
@@ -32,7 +37,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
     @Provides
-    fun provideDocsItemDao(appDatabase: AppDatabase): saveDocDao {
+    fun provideDocsItemDao(appDatabase: AppDatabase): SaveDocDao {
         return appDatabase.docsItemTypeDao()
     }
 
@@ -45,4 +50,21 @@ class DatabaseModule {
             "TextHunterDB"
         ).build()
     }
+
+    @IoDispatcher
+    @Provides
+    fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    @Singleton
+    @Provides
+    fun providesTHLocalImageSource(
+        @ApplicationContext context: Context,
+        @IoDispatcher ioDispatcher: CoroutineDispatcher
+    ) : THLocalImageSource = DefaultTHLocalImageSource(context, ioDispatcher)
+
+
 }
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class IoDispatcher
