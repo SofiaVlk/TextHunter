@@ -43,6 +43,17 @@ class SavedDocsViewModel @Inject constructor(
     internal var uiState: StateFlow<SavedDocsUiState> = MutableStateFlow(Loading)
 
     init {
+        getDocumentList()
+    }
+
+    fun removeDocument(document: DocumentItem) {
+        viewModelScope.launch {
+            savedDocsRepository.remove(document)
+        }
+        getDocumentList()
+    }
+
+    private fun getDocumentList() {
         viewModelScope.launch {
             uiState = savedDocsRepository.getSavedDocuments()
                 .mapper<List<DocumentItem>, SavedDocsUiState> { documentItemList ->

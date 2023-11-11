@@ -17,6 +17,7 @@
 package com.sofiyavolkovaproyects.texthunter.data.local.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
@@ -28,4 +29,8 @@ interface SaveDocDao {
 
     @Insert
     suspend fun insertDocItem(item: DocumentItem)
+
+    @Delete
+    suspend fun deleteDocItem(item: DocumentItem)
+
 }

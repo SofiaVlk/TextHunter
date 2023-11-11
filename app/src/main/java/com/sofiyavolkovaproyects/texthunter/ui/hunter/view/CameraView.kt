@@ -1,6 +1,5 @@
 package com.sofiyavolkovaproyects.texthunter.ui.hunter.view
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.sofiyavolkovaproyects.texthunter.R
+import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.CameraUIAction
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.getCameraProvider
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.getOutputDirectory
@@ -55,19 +56,25 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
     val imageCapture: ImageCapture = remember {
         ImageCapture.Builder().build()
     }
+    var isLoading by remember { mutableStateOf(false) }
     val galleryLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        if (uri != null) onImageCaptured(uri, true)
+        if (uri != null){
+            onImageCaptured(uri, true)
+            isLoading = true
+        }
     }
 
     CameraPreviewView(
         imageCapture = imageCapture,
+        isLoading = isLoading,
         lensFacing = lensFacing
     ) { cameraUIAction ->
         when (cameraUIAction) {
             is CameraUIAction.OnCameraClick -> {
                 imageCapture.takePicture(context, lensFacing, onImageCaptured, onError)
+                isLoading = true
             }
             is CameraUIAction.OnSwitchCameraClick -> {
                 lensFacing =
@@ -84,10 +91,10 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
     }
 }
 
-@SuppressLint("RestrictedApi")
 @Composable
 private fun CameraPreviewView(
     imageCapture: ImageCapture,
+    isLoading: Boolean,
     lensFacing: Int = CameraSelector.LENS_FACING_BACK,
     cameraUIAction: (CameraUIAction) -> Unit
 ) {
@@ -115,7 +122,9 @@ private fun CameraPreviewView(
 
     Box(modifier = Modifier.fillMaxSize()) {
         AndroidView({ previewView }, modifier = Modifier.fillMaxSize()) {
-
+        }
+        if (isLoading) {
+            CustomCircularProgressBar()
         }
         Column(
             modifier = Modifier.align(Alignment.BottomCenter),

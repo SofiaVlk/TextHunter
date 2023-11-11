@@ -56,6 +56,10 @@ class FakeDocumentsRepository @Inject constructor() : DocumentsRepository {
     override suspend fun add(title: String, body: String) {
         throw NotImplementedError()
     }
+
+    override suspend fun remove(document: DocumentItem) {
+        TODO("Not yet implemented")
+    }
 }
 
 val fakeDocumentsItemList = (1..4).map { order ->

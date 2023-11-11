@@ -16,7 +16,6 @@
 
 package com.sofiyavolkovaproyects.texthunter.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,13 +29,13 @@ import com.sofiyavolkovaproyects.texthunter.ui.components.BottomNavigationBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavHostContainer
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.navigatePopUpToStartDestination
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,7 +52,9 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     bottomBar = {
-                        BottomNavigationBar(currentRoute) { navController.navigate(it) }
+                        BottomNavigationBar(currentRoute) {
+                            navController.navigatePopUpToStartDestination(it)
+                        }
                     }
                 ) { padding ->
                     NavHostContainer(Modifier.padding(padding), navController)

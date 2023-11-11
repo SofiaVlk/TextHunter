@@ -25,7 +25,9 @@ interface DocumentsRepository {
     suspend fun getSavedDocuments() : Flow<List<DocumentItem>>
 
     suspend fun add(title: String, body: String)
-}
+
+    suspend fun remove(document: DocumentItem)
+    }
 
 class DefaultDocumentsRepository @Inject constructor(
     private val docsItemTypeDao: SaveDocDao
@@ -37,5 +39,9 @@ class DefaultDocumentsRepository @Inject constructor(
 
     override suspend fun add(title: String, body: String) {
         docsItemTypeDao.insertDocItem(DocumentItem(title = title, body = body))
+    }
+
+    override suspend fun remove(document: DocumentItem) {
+        docsItemTypeDao.deleteDocItem(document)
     }
 }
