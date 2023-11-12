@@ -28,3 +28,6 @@ val Pink40 = Color(0xFF7D5260)
 
 
 val PurpleCactus = Color(0xFFD5DDF8)
+val SaveIcon = Color(0xFFFF9800)
+val ShareIcon = Color(0xFFE91E63)
+val ExportIcon = Color(0xFF009688)

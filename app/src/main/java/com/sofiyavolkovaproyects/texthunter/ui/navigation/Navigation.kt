@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sofiyavolkovaproyects.texthunter.ui.edittext.EditTextScreen
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocScreen
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryScreen
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.HunterScreen
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
@@ -37,7 +37,7 @@ fun NavHostContainer(
 
             composable(route = EditText.route, arguments = EditText.args) {
                 val text = it.arguments?.getString(TextNavArg.key, "") ?: ""
-                EditTextScreen(modifier,text = text, navigateTo = navigator)
+                EditDocScreen(modifier,text = text, navigateTo = navigator)
             }
         }
     )
