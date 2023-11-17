@@ -52,8 +52,13 @@ interface DataModule {
 
 class FakeDocumentsRepository @Inject constructor() : DocumentsRepository {
     override suspend fun getSavedDocuments(): Flow<List<DocumentItem>> = flowOf(fakeDocumentsItemList)
+    override suspend fun getDocumentById(id: Int): Flow<DocumentItem> = flowOf(fakeDocumentsItemList.first())
 
-    override suspend fun add(title: String, body: String) {
+    override suspend fun updateDocument(document: DocumentItem) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun add(document: DocumentItem) {
         throw NotImplementedError()
     }
 

@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
@@ -69,7 +70,8 @@ import java.util.*
 internal fun EditDocScreen(
     modifier: Modifier = Modifier,
     viewModel: EditTextViewModel = hiltViewModel(),
-    text: String,
+    text: String = "",
+    id: Int = -1,
     navigateTo: (String) -> Unit
 ) {
     val uiStateView by viewModel.uiState.collectAsStateWithLifecycle()
@@ -92,7 +94,7 @@ internal fun EditDocScreen(
                             onDialogExportConfirmationClicked(
                                 fileName = fileName,
                                 context = context,
-                                textState = uiStateView.text,
+                                textState = uiStateView.documentItem.body,
                                 onSuccess = { isSuccess ->
                                     snackBarLauncher(
                                         text = if (isSuccess) {
@@ -125,9 +127,6 @@ internal fun EditDocScreen(
                     onConfirmation = {
                         viewModel.handlerAction(EditDocUIAction.OnSavedDoneClick(fileName))
                         navigateTo(Storage.route)
-                        if (text.isNotEmpty()) {
-                            viewModel.handlerAction(EditDocUIAction.OnTextChanged(text))
-                        }
                     },
                     dialogTitle = "Titulo.",
                     dialogText = "Añade un titulo para el texto.",
@@ -139,7 +138,7 @@ internal fun EditDocScreen(
         is EditDocUiState.Loading -> CustomCircularProgressBar()
 
         is EditDocUiState.OnSharedClick -> {
-            shareText(context = context, textState = uiStateView.text)
+            shareText(context = context, textState = uiStateView.documentItem.body)
         }
 
         is EditDocUiState.OnSnackBar -> {
@@ -152,19 +151,19 @@ internal fun EditDocScreen(
 
         EditDocUiState.Initialize -> {
             if (text.isNotEmpty()) {
-                viewModel.handlerAction(EditDocUIAction.OnTextChanged(text))
+                viewModel.handlerAction(EditDocUIAction.Initialized(id, text))
             }
             CustomCircularProgressBar()
         }
 
         EditDocUiState.TextUpdated -> Unit
-
+        EditDocUiState.Error ->Unit
     }
 
     EditDocument(
-        text = uiStateView.text,
+        documentItem = uiStateView.documentItem,
         updateState = { txtState ->
-                viewModel.handlerAction(EditDocUIAction.OnTextChanged(txtState))
+            viewModel.handlerAction(EditDocUIAction.OnTextChanged(txtState))
         },
         onClick = { action -> viewModel.handlerAction(action) },
     )
@@ -184,7 +183,7 @@ private fun shareText(textState: String, context: Context) {
 
 @Composable
 private fun EditDocument(
-    text: String,
+    documentItem: DocumentItem,
     updateState: (String) -> Unit = {},
     onClick: (EditDocUIAction) -> Unit = {}
 ) {
@@ -195,7 +194,7 @@ private fun EditDocument(
         Column(modifier = Modifier.clip(RoundedCornerShape(4.dp))) {
             Spacer(modifier = Modifier.size(48.dp))
             BasicTextField(
-                value = text,
+                value = documentItem.body,
                 onValueChange = { textChanged -> updateState(textChanged) },
                 modifier = Modifier
                     .fillMaxSize()
@@ -204,13 +203,13 @@ private fun EditDocument(
             )
         }
 
-        Header(text = text, onClick = onClick)
+        Header(title = documentItem.title, onClick = onClick)
     }
 }
 
 @Composable
 private fun Header(
-    text: String,
+    title: String,
     onClick: (EditDocUIAction) -> Unit
 ) {
     Row(
@@ -219,19 +218,18 @@ private fun Header(
     ) {
         Text(
             modifier = Modifier.weight(1f),
-            text = "Titulo",
+            text = title.ifEmpty { "Titulo" },
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center
         )
 
-        AccordionVerticalButtonBar(text = text, onClick = onClick)
+        AccordionVerticalButtonBar(onClick = onClick)
     }
 }
 
 @Composable
 private fun AccordionVerticalButtonBar(
     modifier: Modifier = Modifier,
-    text: String,
     onClick: (EditDocUIAction) -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
@@ -269,7 +267,7 @@ private fun AccordionVerticalButtonBar(
                     Icon(
                         modifier = modifier
                             .size(38.dp)
-                            .clickable { onClick(EditDocUIAction.OnShareClick(text)) },
+                            .clickable { onClick(EditDocUIAction.OnShareClick) },
                         imageVector = Icons.Default.Share,
                         contentDescription = "Settings",
                         tint = ShareIcon
@@ -443,5 +441,10 @@ private fun copyFile(context: Context, fileName: String): Boolean {
 @Preview(showBackground = true)
 @Composable
 private fun DefaultPreview() {
-    EditDocument(text = LoremIpsum(200).values.first().toString())
+    EditDocument(
+        documentItem = DocumentItem(
+            title = LoremIpsum(3).values.first().toString(),
+            body = LoremIpsum(200).values.first().toString()
+        )
+    )
 }

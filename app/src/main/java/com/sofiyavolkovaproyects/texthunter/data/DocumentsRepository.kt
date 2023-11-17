@@ -23,9 +23,9 @@ import javax.inject.Inject
 
 interface DocumentsRepository {
     suspend fun getSavedDocuments() : Flow<List<DocumentItem>>
-
-    suspend fun add(title: String, body: String)
-
+    suspend fun getDocumentById(id: Int) : Flow<DocumentItem>
+    suspend fun updateDocument(document: DocumentItem)
+    suspend fun add(document: DocumentItem)
     suspend fun remove(document: DocumentItem)
     }
 
@@ -37,8 +37,15 @@ class DefaultDocumentsRepository @Inject constructor(
         return docsItemTypeDao.getDocumentItems()
     }
 
-    override suspend fun add(title: String, body: String) {
-        docsItemTypeDao.insertDocItem(DocumentItem(title = title, body = body))
+    override suspend fun getDocumentById(id: Int): Flow<DocumentItem> =
+        docsItemTypeDao.getDocumentItemById(id)
+
+    override suspend fun updateDocument(document: DocumentItem) {
+        docsItemTypeDao.updateDocItem(document)
+    }
+
+    override suspend fun add(document: DocumentItem) {
+        docsItemTypeDao.insertDocItem(document)
     }
 
     override suspend fun remove(document: DocumentItem) {

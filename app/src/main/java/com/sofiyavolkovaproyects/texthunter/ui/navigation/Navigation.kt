@@ -9,6 +9,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocScreen
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryScreen
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.HunterScreen
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.UidNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
@@ -37,7 +38,8 @@ fun NavHostContainer(
 
             composable(route = EditText.route, arguments = EditText.args) {
                 val text = it.arguments?.getString(TextNavArg.key, "") ?: ""
-                EditDocScreen(modifier,text = text, navigateTo = navigator)
+                val id = it.arguments?.getInt(UidNavArg.key, -1) ?: -1
+                EditDocScreen(modifier, text = text, id = id, navigateTo = navigator)
             }
         }
     )

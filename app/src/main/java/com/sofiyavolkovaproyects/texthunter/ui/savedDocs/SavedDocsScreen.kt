@@ -120,7 +120,7 @@ private fun DocumentCard(
             .height(height = 276.dp)
             .padding(horizontal = 12.dp, vertical = 6.dp)
             .clickable {
-                navigateTo(EditText.createNavTextRoute(document.body))
+                navigateTo(EditText.createNavTextRoute(id = document.uid))
             }
 
     ) {

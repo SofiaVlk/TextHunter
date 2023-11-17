@@ -4,6 +4,7 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.UidNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.BottomItemNavData
 import java.util.*
 
@@ -44,16 +45,17 @@ sealed class NavigationParams(
 
     data object EditText : NavigationParams(
         baseRoute = EDIT_TEXT_ROUTE,
-        navArgs = listOf(TextNavArg),
+        navArgs = listOf(TextNavArg, UidNavArg),
     )
-    fun createNavTextRoute(text: String) = "$baseRoute/$text"
+    fun createNavTextRoute(text: String = "Empty", id: Int = -1) = "$baseRoute/$text/$id"
 
 }
 
 enum class NavArg(val key: String, val navType: NavType<*>) {
     IconNavArg(key = "icon", NavType.IntType),
     TitleNavArg(key = "title", NavType.StringType),
-    TextNavArg(key = "text", NavType.StringType)
+    TextNavArg(key = "text", NavType.StringType),
+    UidNavArg(key = "id", NavType.IntType)
 }
 
 sealed class NavData {

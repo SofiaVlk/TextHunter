@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class DocumentItem(
-    val title: String,
-    val body: String
+    val title: String = "",
+    val body: String= ""
 ) {
     @PrimaryKey(autoGenerate = true)
     var uid: Int = 0

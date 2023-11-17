@@ -20,17 +20,24 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SaveDocDao {
-    @Query("SELECT * FROM documentItem ORDER BY uid DESC LIMIT 10")
+    @Query("SELECT * FROM documentItem ORDER BY uid DESC")
     fun getDocumentItems(): Flow<List<DocumentItem>>
+
+    @Query("SELECT * FROM documentItem WHERE uid = :id")
+    fun getDocumentItemById(id: Int): Flow<DocumentItem>
 
     @Insert
     suspend fun insertDocItem(item: DocumentItem)
 
     @Delete
     suspend fun deleteDocItem(item: DocumentItem)
+
+    @Update
+    suspend fun updateDocItem(item: DocumentItem)
 
 }
