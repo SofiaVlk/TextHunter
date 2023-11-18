@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,9 +35,9 @@ internal fun FloatingButtonCam(
                 modifier = modifier
                     .padding(6.dp),
                 text = text,
-                style = MaterialTheme.typography.titleLarge,
-                color = Color.Magenta,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.background,
+                fontWeight = FontWeight.Medium,
             )
         },
         icon = {
@@ -48,7 +47,9 @@ internal fun FloatingButtonCam(
             )
         },
         expanded = expanded,
-        shape = RoundedCornerShape(50)
+        shape = RoundedCornerShape(50),
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.background
     )
 }
 

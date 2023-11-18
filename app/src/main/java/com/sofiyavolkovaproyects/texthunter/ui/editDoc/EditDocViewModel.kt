@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,7 +19,7 @@ class EditTextViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Backing property to avoid state updates from other classes
-    private var _uiState: MutableStateFlow<EditDocUiStateView> =
+    private val _uiState: MutableStateFlow<EditDocUiStateView> =
         MutableStateFlow(EditDocUiStateView())
 
     // The UI collects from this StateFlow to get its state updates
@@ -74,10 +73,7 @@ class EditTextViewModel @Inject constructor(
                     viewModelScope.launch {
                             savedDocsRepository.getDocumentById(action.id)
                                 .catch { _uiState.value.copy(uiState = EditDocUiState.Error) }
-                                .first()
-                                .let {
-                                    updateData(it)
-                                }
+                                .collect { updateData(it) }
                     }
                 } else {
                     updateData(DocumentItem(body = action.text))

@@ -47,7 +47,6 @@ interface DataModule {
         documentsRepository: DefaultImagesRepository
     ): ImagesRepository
 
-
 }
 
 class FakeDocumentsRepository @Inject constructor() : DocumentsRepository {

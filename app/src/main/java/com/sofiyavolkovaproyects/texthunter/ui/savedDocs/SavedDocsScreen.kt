@@ -1,5 +1,6 @@
 package com.sofiyavolkovaproyects.texthunter.ui.savedDocs
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DismissValue.DismissedToEnd
-import androidx.compose.material3.DismissValue.DismissedToStart
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -48,20 +50,24 @@ fun SavedDocsScreen(
     viewModel: SavedDocsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var docList: List<DocumentItem> = remember { mutableStateListOf() }
+
     when (uiState) {
-        is SavedDocsUiState.Success -> SavedDocsScreen(
-            modifier = modifier,
-            docList = (uiState as SavedDocsUiState.Success).data,
-            navigateTo = navigateTo
-        ) { document -> viewModel.removeDocument(document) }
+        is SavedDocsUiState.Success ->
+            docList = (uiState as SavedDocsUiState.Success).data
 
         is SavedDocsUiState.Loading -> CustomCircularProgressBar()
         is SavedDocsUiState.Error -> {}
     }
 
-
+    SavedDocsScreen(
+        modifier = modifier,
+        docList = docList,
+        navigateTo = navigateTo
+    ) { document -> viewModel.removeDocument(document) }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun SavedDocsScreen(
     modifier: Modifier = Modifier,
@@ -71,7 +77,11 @@ internal fun SavedDocsScreen(
 ) {
     LazyColumn {
         items(docList) { document ->
-            DocumentCard(navigateTo, document) {
+            DocumentCard(
+                modifier = Modifier.animateItemPlacement(),
+                navigateTo = navigateTo,
+                document = document
+            ) {
                 onSwipeCard(document)
             }
         }
@@ -81,11 +91,13 @@ internal fun SavedDocsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DocumentCard(
+    modifier: Modifier,
     navigateTo: (String) -> Unit,
     document: DocumentItem,
     onSwipeCard: () -> Unit,
 ) {
     SwipeToDismiss(
+        modifier = modifier,
         state = getDismissState(onSwipeCard),
         background = { RemovedCard() },
         dismissContent = { DocumentCard(navigateTo, document) }
@@ -99,7 +111,7 @@ private fun getDismissState(onSwipeCard: () -> Unit) = rememberDismissState(
         if (it == DismissedToEnd) {
             onSwipeCard()
         }
-        it != DismissedToStart
+        false
     }
 )
 

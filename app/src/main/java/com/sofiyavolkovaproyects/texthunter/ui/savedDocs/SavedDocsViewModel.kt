@@ -24,14 +24,10 @@ import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,7 +36,8 @@ class SavedDocsViewModel @Inject constructor(
     private val savedDocsRepository: DocumentsRepository
 ) : ViewModel() {
 
-    internal var uiState: StateFlow<SavedDocsUiState> = MutableStateFlow(Loading)
+    private var _uiState: MutableStateFlow<SavedDocsUiState> = MutableStateFlow(Loading)
+    internal val uiState: StateFlow<SavedDocsUiState> get() = _uiState
 
     init {
         getDocumentList()
@@ -55,12 +52,9 @@ class SavedDocsViewModel @Inject constructor(
 
     private fun getDocumentList() {
         viewModelScope.launch {
-            uiState = savedDocsRepository.getSavedDocuments()
-                .mapper<List<DocumentItem>, SavedDocsUiState> { documentItemList ->
-                    Success(documentItemList)
-                }
-                .catch { emit(Error(it)) }
-                .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Loading)
+            savedDocsRepository.getSavedDocuments()
+                .catch { error -> _uiState.update { Error(error) } }
+                .collect { docItemList -> _uiState.update { Success(docItemList) } }
         }
     }
 }
@@ -69,9 +63,4 @@ sealed interface SavedDocsUiState {
     data object Loading : SavedDocsUiState
     data class Error(val throwable: Throwable) : SavedDocsUiState
     data class Success(val data: List<DocumentItem>) : SavedDocsUiState
-}
-
-inline fun <T, R> Flow<T>.mapper(crossinline transform: suspend (value: T) -> R): Flow<R> = transform { value ->
-    delay(1000)
-    return@transform emit(transform(value))
 }

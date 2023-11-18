@@ -1,33 +1,37 @@
-/*
- * Copyright (C) 2022 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.sofiyavolkovaproyects.texthunter.ui.hunter
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class HunterViewModel @Inject constructor(
-) : ViewModel() {
+class HunterViewModel @Inject constructor(): ViewModel() {
 
-    //val uiState: StateFlow<HunterUiState> =
+    private val _uiState = MutableStateFlow<HunterUiState>(HunterUiState.Initial)
+    val uiState: StateFlow<HunterUiState> get() = _uiState
 
+    fun handlerAction(action: HunterUiAction) {
+        when (action) {
+            is HunterUiAction.SuccessImage ->
+                _uiState.update { HunterUiState.NavigateToEdit(action.text) }
+
+            HunterUiAction.ErrorImage ->
+                _uiState.update { HunterUiState.ErrorScreen }
+
+            HunterUiAction.OnCapturedButtonClick ->
+                _uiState.update { HunterUiState.Loading }
+
+            HunterUiAction.OnNavigate -> _uiState.update { HunterUiState.Initial }
+        }
+    }
 }
 
 sealed interface HunterUiState {
+    data object Initial : HunterUiState
     data object Loading : HunterUiState
+    data object ErrorScreen : HunterUiState
+    data class NavigateToEdit(val text: String) : HunterUiState
 }

@@ -13,6 +13,11 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.net.toFile
+import com.google.android.gms.tasks.Task
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.sofiyavolkovaproyects.texthunter.R
 import java.io.File
 import java.util.*
@@ -106,3 +111,11 @@ fun Context.getOutputDirectory(): File {
     return if (mediaDir != null && mediaDir.exists())
         mediaDir else File(this.filesDir, "images")
 }
+
+fun Context.textRecognizerProcess(uri: Uri): Task<Text> {
+    val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    val image: InputImage = InputImage.fromFilePath(this, uri)
+    return recognizer.process(image)
+}
+
+

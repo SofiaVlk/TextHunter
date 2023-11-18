@@ -35,7 +35,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class DatabaseModule {
+class SourceModule {
     @Provides
     fun provideDocsItemDao(appDatabase: AppDatabase): SaveDocDao {
         return appDatabase.docsItemTypeDao()
@@ -61,7 +61,6 @@ class DatabaseModule {
         @ApplicationContext context: Context,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ) : THLocalImageSource = DefaultTHLocalImageSource(context, ioDispatcher)
-
 
 }
 

@@ -26,8 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sofiyavolkovaproyects.texthunter.ui.components.BottomNavigationBar
+import com.sofiyavolkovaproyects.texthunter.ui.components.FloatingButtonCam
 import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavHostContainer
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.navigatePopUpToStartDestination
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
@@ -52,8 +55,19 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     bottomBar = {
-                        BottomNavigationBar(currentRoute) {
-                            navController.navigatePopUpToStartDestination(it)
+                        if (currentRoute != EditText.route) {
+                            BottomNavigationBar(currentRoute) {
+                                navController.navigatePopUpToStartDestination(it)
+                            }
+                        }
+                    },
+                    floatingActionButton = {
+                        if (currentRoute != Hunter.route && currentRoute != EditText.route) {
+                            FloatingButtonCam(
+                                text = "Capture",
+                                expanded = true,
+                                onClick = { navController.navigate(Hunter.route) }
+                            )
                         }
                     }
                 ) { padding ->
