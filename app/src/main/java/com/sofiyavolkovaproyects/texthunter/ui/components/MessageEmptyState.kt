@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,7 +37,7 @@ internal fun MessageEmptyState(
     bodyText: String
 ) {
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
             .background(PurpleCactus),
         horizontalAlignment = Alignment.CenterHorizontally
 
@@ -68,6 +69,8 @@ internal fun MessageEmptyState(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.secondary,
             fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            textAlign = TextAlign.Center
+
         )
     }
 }

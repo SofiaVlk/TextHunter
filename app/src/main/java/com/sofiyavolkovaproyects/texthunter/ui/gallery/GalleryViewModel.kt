@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaproyects.texthunter.data.DefaultImagesRepository
 import com.sofiyavolkovaproyects.texthunter.modelo.Media
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Empty
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Success
@@ -30,7 +31,15 @@ class GalleryViewModel @Inject constructor(
         viewModelScope.launch {
             imagesRepository.getImages()
                 .catch { _uiState.update { Error } }
-                .collect { imageList -> _uiState.update { Success(imageList) } }
+                .collect { imageList ->
+                    _uiState.update {
+                        if (imageList.isNotEmpty()) {
+                            Success(imageList)
+                        } else {
+                            Empty
+                        }
+                    }
+                }
         }
     }
 
@@ -39,20 +48,22 @@ class GalleryViewModel @Inject constructor(
             imagesRepository.deleteImage(media)
         }
     }
+
     fun handlerAction(action: GalleryUIAction) {
-        when (action){
-           is GalleryUIAction.OnClickDeleteImage -> {
-               removeImage(media = action.media)
-               getGalleryImages()
-           }
+        when (action) {
+            is GalleryUIAction.OnClickDeleteImage -> {
+                removeImage(media = action.media)
+                getGalleryImages()
+            }
 
         }
     }
 
-    }
+}
 
 sealed interface GalleryUiState {
     data object Loading : GalleryUiState
     data class Success(val mediaList: List<Media>) : GalleryUiState
     data object Error : GalleryUiState
+    data object Empty : GalleryUiState
 }

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Empty
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
@@ -54,13 +55,22 @@ class SavedDocsViewModel @Inject constructor(
         viewModelScope.launch {
             savedDocsRepository.getSavedDocuments()
                 .catch { error -> _uiState.update { Error(error) } }
-                .collect { docItemList -> _uiState.update { Success(docItemList) } }
+                .collect { docItemList ->
+                    _uiState.update {
+                        if (docItemList.isNotEmpty()) {
+                            Success(docItemList)
+                        } else {
+                            Empty
+                        }
+                    }
+                }
         }
     }
 }
 
 sealed interface SavedDocsUiState {
     data object Loading : SavedDocsUiState
+    data object Empty : SavedDocsUiState
     data class Error(val throwable: Throwable) : SavedDocsUiState
     data class Success(val data: List<DocumentItem>) : SavedDocsUiState
 }

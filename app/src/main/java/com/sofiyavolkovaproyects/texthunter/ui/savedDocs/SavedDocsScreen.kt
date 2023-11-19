@@ -40,7 +40,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaproyects.texthunter.R.drawable
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
+import com.sofiyavolkovaproyects.texthunter.ui.components.MessageEmptyState
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Empty
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
+import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
 import com.sofiyavolkovaproyects.texthunter.ui.theme.THTheme
 
 @Composable
@@ -53,11 +58,12 @@ fun SavedDocsScreen(
     var docList: List<DocumentItem> = remember { mutableStateListOf() }
 
     when (uiState) {
-        is SavedDocsUiState.Success ->
-            docList = (uiState as SavedDocsUiState.Success).data
+        is Success ->
+            docList = (uiState as Success).data
 
-        is SavedDocsUiState.Loading -> CustomCircularProgressBar()
-        is SavedDocsUiState.Error -> {}
+        is Loading -> CustomCircularProgressBar()
+        is Error -> {}
+        Empty -> MessageEmptyState(title = "Documentos no encontadros", bodyText = "En esta sección se se mostrarán los textos capturados que haya decidido guardar")
     }
 
     SavedDocsScreen(

@@ -46,7 +46,12 @@ import coil.request.ImageRequest
 import com.sofiyavolkovaproyects.texthunter.modelo.Media
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
+import com.sofiyavolkovaproyects.texthunter.ui.components.MessageEmptyState
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresMediaImagesPermission
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Empty
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Error
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Loading
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Success
 
 @Composable
 fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = hiltViewModel()) {
@@ -54,17 +59,18 @@ fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = h
     RequiresMediaImagesPermission {
 
         when (galleryState) {
-            GalleryUiState.Loading -> CustomCircularProgressBar()
-            is GalleryUiState.Success -> PhotoGrid(
+            Loading -> CustomCircularProgressBar()
+            is Success -> PhotoGrid(
                 modifier = modifier,
-                photos = (galleryState as GalleryUiState.Success).mediaList,
+                photos = (galleryState as Success).mediaList,
                 onClickItem = {},
                 onDeleteClick = { action ->
                     viewModel.handlerAction(action)
                 }
             )
 
-            is GalleryUiState.Error -> Unit
+            is Error -> Unit
+            Empty -> MessageEmptyState(title = "No se encuentran fotografia guardadas.", bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas.")
         }
     }
 }
