@@ -37,10 +37,11 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.R.drawable
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
-import com.sofiyavolkovaproyects.texthunter.ui.components.MessageEmptyState
+import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Empty
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
@@ -61,9 +62,16 @@ fun SavedDocsScreen(
         is Success ->
             docList = (uiState as Success).data
 
-        is Loading -> CustomCircularProgressBar()
-        is Error -> {}
-        Empty -> MessageEmptyState(title = "Documentos no encontadros", bodyText = "En esta sección se se mostrarán los textos capturados que haya decidido guardar")
+        Loading -> CustomCircularProgressBar()
+        Error -> InfoMessage(
+            imagePainter = painterResource(R.drawable.error_message_01),
+            title = "Error",
+            bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+        )
+        Empty -> InfoMessage(
+            title = "Documentos no encontadros",
+            bodyText = "En esta sección se se mostrarán los textos capturados que haya decidido guardar"
+        )
     }
 
     SavedDocsScreen(
@@ -208,9 +216,10 @@ private fun RemovedCard() {
             .height(height = 276.dp)
             .padding(horizontal = 12.dp, vertical = 6.dp)
     ) {
-        Column( modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
             verticalArrangement = Arrangement.Center
 
         ) {

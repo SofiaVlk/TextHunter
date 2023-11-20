@@ -54,7 +54,7 @@ class SavedDocsViewModel @Inject constructor(
     private fun getDocumentList() {
         viewModelScope.launch {
             savedDocsRepository.getSavedDocuments()
-                .catch { error -> _uiState.update { Error(error) } }
+                .catch { error -> _uiState.update { Error } }
                 .collect { docItemList ->
                     _uiState.update {
                         if (docItemList.isNotEmpty()) {
@@ -71,6 +71,6 @@ class SavedDocsViewModel @Inject constructor(
 sealed interface SavedDocsUiState {
     data object Loading : SavedDocsUiState
     data object Empty : SavedDocsUiState
-    data class Error(val throwable: Throwable) : SavedDocsUiState
+    data object Error: SavedDocsUiState
     data class Success(val data: List<DocumentItem>) : SavedDocsUiState
 }

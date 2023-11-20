@@ -66,7 +66,9 @@ class MainActivity : ComponentActivity() {
                             FloatingButtonCam(
                                 text = "Capture",
                                 expanded = true,
-                                onClick = { navController.navigate(Hunter.route) }
+                                onClick = {
+                                    navController.navigatePopUpToStartDestination(Hunter.route)
+                                }
                             )
                         }
                     }

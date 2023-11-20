@@ -38,15 +38,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.modelo.Media
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
-import com.sofiyavolkovaproyects.texthunter.ui.components.MessageEmptyState
+import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresMediaImagesPermission
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Empty
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Error
@@ -69,8 +71,15 @@ fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = h
                 }
             )
 
-            is Error -> Unit
-            Empty -> MessageEmptyState(title = "No se encuentran fotografia guardadas.", bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas.")
+            Error -> InfoMessage(
+                imagePainter = painterResource(R.drawable.error_message_01),
+                title = "Error",
+                bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+            )
+            Empty -> InfoMessage(
+                title = "No se encuentran fotografia guardadas.",
+                bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas."
+            )
         }
     }
 }

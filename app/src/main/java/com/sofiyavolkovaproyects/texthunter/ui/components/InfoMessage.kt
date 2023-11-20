@@ -26,13 +26,13 @@ import com.sofiyavolkovaproyects.texthunter.ui.theme.PurpleCactus
 @Composable
 @Preview(showBackground = true)
 private fun MessageEmptyStateSample() {
-    MessageEmptyState(title = "No file found", bodyText = LoremIpsum(80).values.first())
+    InfoMessage(title = "No file found", bodyText = LoremIpsum(80).values.first())
 }
 
 @Composable
-internal fun MessageEmptyState(
+internal fun InfoMessage(
     modifier: Modifier = Modifier,
-    emptyPainter: Painter = painterResource(R.mipmap.ic_empty_state),
+    imagePainter: Painter = painterResource(R.mipmap.ic_empty_state),
     title: String,
     bodyText: String
 ) {
@@ -44,7 +44,7 @@ internal fun MessageEmptyState(
     ) {
         Image(
             modifier = Modifier.size(200.dp),
-            painter = emptyPainter,
+            painter = imagePainter,
             contentDescription = null
         )
 
@@ -54,7 +54,7 @@ internal fun MessageEmptyState(
             modifier = Modifier
                 .fillMaxWidth(),
             text = title,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center
@@ -66,9 +66,8 @@ internal fun MessageEmptyState(
             modifier = Modifier
                 .padding(20.dp),
             text = bodyText,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.secondary,
-            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.background,
             textAlign = TextAlign.Center
 
         )

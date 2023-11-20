@@ -7,9 +7,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sofiyavolkovaproyects.texthunter.R.drawable
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
+import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.HunterUiAction.OnNavigate
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.view.CameraView
@@ -55,22 +58,28 @@ fun HunterScreenView(
             onImageCaptured = { uri, _ ->
                 Log.d(TAG, "Image Uri Captured from Camera View in: " + uri.path)
                 onActionEvent(HunterUiAction.OnCapturedButtonClick)
-                context.textRecognizerProcess(uri)
-                    .addOnSuccessListener {
-                        onActionEvent(HunterUiAction.SuccessImage(it.text))
-                    }
-                    .addOnFailureListener {
-                        onActionEvent(HunterUiAction.ErrorImage)
-                    }
+                try {
+                    context.textRecognizerProcess(uri)
+                        .addOnSuccessListener {
+                            onActionEvent(HunterUiAction.SuccessImage(it.text))
+                        }
+                        .addOnFailureListener {
+                            onActionEvent(HunterUiAction.ErrorImage)
+                        }
+                } catch (e: Exception) {
+                    onActionEvent(HunterUiAction.ErrorImage)
+                }
             }, onError = { imageCaptureException ->
                 Log.d(TAG, "ERROR CAPTURE CAMERA: " + imageCaptureException.message)
                 onActionEvent(HunterUiAction.ErrorImage)
             }
         )
 
-        HunterUiState.ErrorScreen -> {
-            //TODO: crete error view
-        }
+        HunterUiState.ErrorScreen -> InfoMessage(
+            imagePainter = painterResource(drawable.error_message_01),
+            title = "Error",
+            bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+        )
     }
 
 }
