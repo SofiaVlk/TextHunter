@@ -4,8 +4,8 @@ import androidx.navigation.NavHostController
 
 fun NavHostController.navigatePopUpToStartDestination(route: String) {
     navigate(route) {
-        popUpTo(graph.startDestinationId) { saveState = true }
+        popUpTo(graph.startDestinationId) { saveState = false }
         launchSingleTop = true
-        restoreState = true
+        restoreState = false
     }
 }

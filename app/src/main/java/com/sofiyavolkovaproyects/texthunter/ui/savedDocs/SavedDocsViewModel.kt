@@ -25,12 +25,12 @@ import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class SavedDocsViewModel @Inject constructor(
@@ -54,7 +54,7 @@ class SavedDocsViewModel @Inject constructor(
     private fun getDocumentList() {
         viewModelScope.launch {
             savedDocsRepository.getSavedDocuments()
-                .catch { error -> _uiState.update { Error } }
+                .catch { _uiState.update { Error } }
                 .collect { docItemList ->
                     _uiState.update {
                         if (docItemList.isNotEmpty()) {

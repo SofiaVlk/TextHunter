@@ -35,7 +35,7 @@ fun NavHostContainer(
                 try {
                     navController.navigate(it)
                 } catch (e: Exception) {
-                    navController.navigate("Error")
+                    navController.navigatePopUpToStartDestination("Error")
                 }
             }
 
@@ -46,7 +46,12 @@ fun NavHostContainer(
                 )
             }
 
-            composable(route = Gallery.route) { GalleryScreen(modifier = modifier) }
+            composable(route = Gallery.route) {
+                GalleryScreen(
+                    modifier = modifier,
+                    navigateTo = navigator
+                )
+            }
 
             composable(route = Hunter.route) {
                 HunterScreen(

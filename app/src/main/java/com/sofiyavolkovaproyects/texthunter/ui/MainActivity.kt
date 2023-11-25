@@ -62,7 +62,7 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     floatingActionButton = {
-                        if (currentRoute != Hunter.route && currentRoute != EditText.route) {
+                        if (currentRoute == Storage.route) {
                             FloatingButtonCam(
                                 text = "Capture",
                                 expanded = true,

@@ -44,35 +44,55 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.sofiyavolkovaproyects.texthunter.R
+import com.sofiyavolkovaproyects.texthunter.R.drawable
 import com.sofiyavolkovaproyects.texthunter.modelo.Media
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresMediaImagesPermission
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUIAction.OnErrorText
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUIAction.OnInitialize
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUIAction.OnSuccessText
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.CaptureText
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Empty
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Error
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Initialize
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Loading
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.NavigateToEdit
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Success
+import com.sofiyavolkovaproyects.texthunter.ui.hunter.textRecognizerProcess
 
 @Composable
-fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = hiltViewModel()) {
+fun GalleryScreen(modifier: Modifier = Modifier,
+ navigateTo: (String) -> Unit = {},
+ viewModel: GalleryViewModel = hiltViewModel()
+) {
     val galleryState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    var mediaList: List<Media> by remember {
+        mutableStateOf(emptyList())
+    }
     RequiresMediaImagesPermission {
+
 
         when (galleryState) {
             Loading -> CustomCircularProgressBar()
-            is Success -> PhotoGrid(
-                modifier = modifier,
-                photos = (galleryState as Success).mediaList,
-                onClickItem = {},
-                onDeleteClick = { action ->
-                    viewModel.handlerAction(action)
+            is Success -> mediaList = (galleryState as Success).mediaList
+            is NavigateToEdit ->  navigateTo((galleryState as NavigateToEdit).text)
+
+            is CaptureText ->{
+                context.textRecognizerProcess((galleryState as CaptureText).uri)
+                    .addOnSuccessListener {
+                    result ->
+                        viewModel.handlerAction(OnSuccessText(result.text))
+                }.addOnFailureListener{
+                   viewModel.handlerAction(OnErrorText)
                 }
-            )
+            }
 
             Error -> InfoMessage(
-                imagePainter = painterResource(R.drawable.error_message_01),
+                imagePainter = painterResource(drawable.error_message_01),
                 title = "Error",
                 bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
             )
@@ -80,7 +100,16 @@ fun GalleryScreen(modifier: Modifier = Modifier, viewModel: GalleryViewModel = h
                 title = "No se encuentran fotografia guardadas.",
                 bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas."
             )
+
+            Initialize -> viewModel.handlerAction(OnInitialize)
         }
+
+        PhotoGrid(
+            modifier = modifier,
+            photos = mediaList,
+            onClickItem = {action ->
+                viewModel.handlerAction(action)}
+        )
     }
 }
 
@@ -90,8 +119,7 @@ fun PhotoGrid(
     photos: List<Media>,
     modifier: Modifier = Modifier,
     borderColor: Color = MaterialTheme.colorScheme.background,
-    onClickItem: (Media) -> Unit = {},
-    onDeleteClick: (GalleryUIAction) -> Unit = {}
+    onClickItem: (GalleryUIAction) -> Unit = {}
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary
     var itemSelected by remember { mutableStateOf("") }
@@ -118,7 +146,6 @@ fun PhotoGrid(
                         )
                         .height(250.dp)
                         .clickable {
-                            onClickItem(media)
                             itemSelected = media.name
                         },
                     model = ImageRequest.Builder(LocalContext.current)
@@ -149,13 +176,15 @@ fun PhotoGrid(
                         ButtonBasic(
                             text = "Capturar",
                             icon = Icons.Default.CameraAlt,
-                            onClick = {}
+                            onClick = {
+                                onClickItem(GalleryUIAction.OnClickCaptureImage(media.uri))
+                            }
                         )
                         ButtonBasic(
                             text = "Eliminar",
                             icon = Icons.Default.DeleteForever,
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
-                            onClick = { onDeleteClick(GalleryUIAction.OnClickDeleteImage(media)) }
+                            onClick = { onClickItem(GalleryUIAction.OnClickDeleteImage(media)) }
                         )
                     }
 
