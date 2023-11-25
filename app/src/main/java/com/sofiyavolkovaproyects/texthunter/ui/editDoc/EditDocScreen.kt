@@ -42,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +60,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocSideEffect.OnSharedClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocSideEffect.OnTextToSpeechClicked
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.Initialized
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportClick
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportDismissClicked
@@ -74,15 +77,15 @@ import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialo
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Initialize
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Loading
-import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnSharedClick
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnSnackBar
-import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnTextToSpeechClicked
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.TextUpdated
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
 import com.sofiyavolkovaproyects.texthunter.ui.theme.ExportIcon
 import com.sofiyavolkovaproyects.texthunter.ui.theme.SaveIcon
 import com.sofiyavolkovaproyects.texthunter.ui.theme.ShareIcon
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
@@ -100,13 +103,27 @@ internal fun EditDocScreen(
     navigateTo: (String) -> Unit
 ) {
     val uiStateView by viewModel.uiState.collectAsStateWithLifecycle()
-
+    val effectFlow = viewModel.effect
 
     val context = LocalContext.current
     var fileName = ""
     val dialogText = "Introduce el nombre del documento de texto. \n ejemplo: NombreDoc.txt"
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(true) {
+        effectFlow.onEach { effect ->
+            when(effect) {
+                is OnTextToSpeechClicked -> {
+                    speechText(context, effect.text, textToSpeech)
+                }
+
+                is OnSharedClick -> {
+                    shareText(context = context, textState = uiStateView.documentItem.body)
+                }
+            }
+        }.collect()
+    }
 
     when (uiStateView.uiState) {
         is AlertDialogExportDoc -> {
@@ -163,10 +180,6 @@ internal fun EditDocScreen(
 
         is Loading -> CustomCircularProgressBar()
 
-        is OnSharedClick -> {
-            shareText(context = context, textState = uiStateView.documentItem.body)
-        }
-
         is OnSnackBar -> {
             snackBarLauncher(
                 text = (uiStateView.uiState as OnSnackBar).text,
@@ -184,9 +197,7 @@ internal fun EditDocScreen(
 
         TextUpdated -> Unit
         Error -> Unit
-        is OnTextToSpeechClicked -> {
-            SpeechText( (uiStateView.uiState as OnTextToSpeechClicked).text, textToSpeech)
-        }
+
     }
 
     EditDocument(
@@ -200,8 +211,8 @@ internal fun EditDocScreen(
     SnackbarHost(hostState = snackBarHostState)
 }
 
-@Composable
-private fun SpeechText(
+private fun speechText(
+    context: Context,
     text: String,
     textToSpeech: TextToSpeech
 ) {
@@ -209,7 +220,7 @@ private fun SpeechText(
     if (text.isNotEmpty()) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "tts1")
     } else {
-        Toast.makeText(LocalContext.current, "Text cannot be empty", Toast.LENGTH_LONG)
+        Toast.makeText(context, "Text cannot be empty", Toast.LENGTH_LONG)
             .show()
     }
 }
