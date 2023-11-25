@@ -4,6 +4,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.Initialized
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportDismissClicked
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportDoneClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportError
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSaveClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSavedDismissClicked
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSavedDoneClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnShareClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSpokenText
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnTextChanged
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialogExportDoc
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialogSaveDoc
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Error
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnSharedClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnTextToSpeechClicked
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.TextUpdated
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,52 +49,54 @@ class EditTextViewModel @Inject constructor(
 
     fun handlerAction(action: EditDocUIAction) {
         when (action) {
-            EditDocUIAction.OnSaveClick -> updateState { EditDocUiState.AlertDialogSaveDoc(true) }
-            is EditDocUIAction.OnShareClick -> updateState { EditDocUiState.OnSharedClick }
-            EditDocUIAction.OnExportClick -> updateState {
-                EditDocUiState.AlertDialogExportDoc(true)
+            OnSaveClick -> updateState { AlertDialogSaveDoc(true) }
+            is OnShareClick -> updateState { OnSharedClick }
+            OnExportClick -> updateState {
+                AlertDialogExportDoc(true)
             }
 
-            EditDocUIAction.OnSavedDismissClicked -> updateState {
-                EditDocUiState.AlertDialogSaveDoc(false)
+            OnSavedDismissClicked -> updateState {
+                AlertDialogSaveDoc(false)
             }
 
-            EditDocUIAction.OnExportDismissClicked -> updateState {
-                EditDocUiState.AlertDialogExportDoc(false)
+            OnExportDismissClicked -> updateState {
+                AlertDialogExportDoc(false)
             }
 
-            EditDocUIAction.OnExportDoneClick -> {
-                updateState { EditDocUiState.AlertDialogExportDoc(false) }
+            OnExportDoneClick -> {
+                updateState { AlertDialogExportDoc(false) }
             }
 
-            is EditDocUIAction.OnSavedDoneClick -> {
+            is OnSavedDoneClick -> {
                 addDocument(DocumentItem(action.title, uiState.value.documentItem.body))
                 updateState {
-                    EditDocUiState.AlertDialogExportDoc(false)
+                    AlertDialogExportDoc(false)
                 }
             }
 
-            is EditDocUIAction.OnTextChanged -> {
+            is OnTextChanged -> {
                 updateData(DocumentItem(_uiState.value.documentItem.title, action.text))
             }
 
-            is EditDocUIAction.OnExportError -> {
+            is OnExportError -> {
                 updateState {
-                    EditDocUiState.AlertDialogExportDoc(true, action.text)
+                    AlertDialogExportDoc(true, action.text)
                 }
             }
 
-            is EditDocUIAction.Initialized -> {
+            is Initialized -> {
                 if (action.id != -1) {
                     viewModelScope.launch {
-                            savedDocsRepository.getDocumentById(action.id)
-                                .catch { _uiState.value.copy(uiState = EditDocUiState.Error) }
-                                .collect { updateData(it) }
+                        savedDocsRepository.getDocumentById(action.id)
+                            .catch { updateState { Error } }
+                            .collect { updateData(it) }
                     }
                 } else {
                     updateData(DocumentItem(body = action.text))
                 }
             }
+
+            OnSpokenText -> updateState { OnTextToSpeechClicked(_uiState.value.documentItem.body) }
         }
     }
 
@@ -108,4 +126,6 @@ sealed interface EditDocUiState {
     data object Initialize : EditDocUiState
     data object TextUpdated : EditDocUiState
     data object Error : EditDocUiState
+
+    data class OnTextToSpeechClicked(val text: String) : EditDocUiState
 }

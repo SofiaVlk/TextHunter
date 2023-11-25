@@ -1,5 +1,6 @@
 package com.sofiyavolkovaproyects.texthunter.ui.navigation
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,6 +24,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.savedDocs.SavedDocsScreen
 fun NavHostContainer(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    textToSpeech: TextToSpeech
 ) {
 
     NavHost(
@@ -40,10 +42,7 @@ fun NavHostContainer(
             }
 
             composable(route = Storage.route) {
-                SavedDocsScreen(
-                    modifier = modifier,
-                    navigateTo = navigator
-                )
+                SavedDocsScreen(modifier = modifier, navigateTo = navigator)
             }
 
             composable(route = Gallery.route) {
@@ -54,10 +53,7 @@ fun NavHostContainer(
             }
 
             composable(route = Hunter.route) {
-                HunterScreen(
-                    modifier = modifier,
-                    navigateTo = navigator
-                )
+                HunterScreen(modifier = modifier, navigateTo = navigator)
             }
             composable(route = "Error") {
                 InfoMessage(
@@ -70,7 +66,12 @@ fun NavHostContainer(
             composable(route = EditText.route, arguments = EditText.args) {
                 val text = it.arguments?.getString(TextNavArg.key, "") ?: ""
                 val id = it.arguments?.getInt(UidNavArg.key, -1) ?: -1
-                EditDocScreen(modifier, text = text, id = id, navigateTo = navigator)
+                EditDocScreen(
+                    text = text,
+                    id = id,
+                    navigateTo = navigator,
+                    textToSpeech = textToSpeech
+                )
             }
         }
     )

@@ -11,4 +11,5 @@ sealed class EditDocUIAction {
     data class OnTextChanged(val text: String) : EditDocUIAction()
     data class OnExportError(val text: String) : EditDocUIAction()
     data class Initialized(val id: Int, val text: String): EditDocUIAction()
+    data object OnSpokenText: EditDocUIAction()
 }

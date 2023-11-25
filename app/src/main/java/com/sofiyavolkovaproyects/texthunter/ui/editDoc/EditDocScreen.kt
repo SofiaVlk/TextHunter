@@ -1,13 +1,15 @@
 package com.sofiyavolkovaproyects.texthunter.ui.editDoc
 
-import android.Manifest
+import android.Manifest.permission
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,11 +25,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.TwoTone
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.twotone.SpeakerPhone
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -53,6 +59,25 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.Initialized
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportDismissClicked
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportDoneClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportError
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSaveClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSavedDismissClicked
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSavedDoneClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnShareClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnSpokenText
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialogExportDoc
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialogSaveDoc
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Error
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Initialize
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Loading
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnSharedClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnSnackBar
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnTextToSpeechClicked
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.TextUpdated
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
 import com.sofiyavolkovaproyects.texthunter.ui.theme.ExportIcon
 import com.sofiyavolkovaproyects.texthunter.ui.theme.SaveIcon
@@ -68,29 +93,30 @@ import java.util.*
 
 @Composable
 internal fun EditDocScreen(
-    modifier: Modifier = Modifier,
     viewModel: EditTextViewModel = hiltViewModel(),
     text: String = "",
     id: Int = -1,
+    textToSpeech: TextToSpeech,
     navigateTo: (String) -> Unit
 ) {
     val uiStateView by viewModel.uiState.collectAsStateWithLifecycle()
+
 
     val context = LocalContext.current
     var fileName = ""
     val dialogText = "Introduce el nombre del documento de texto. \n ejemplo: NombreDoc.txt"
     val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackBarHostState = remember { SnackbarHostState() }
 
     when (uiStateView.uiState) {
-        is EditDocUiState.AlertDialogExportDoc -> {
-            val alertDialogExportDoc = uiStateView.uiState as EditDocUiState.AlertDialogExportDoc
+        is AlertDialogExportDoc -> {
+            val alertDialogExportDoc = uiStateView.uiState as AlertDialogExportDoc
             if (alertDialogExportDoc.visible) {
-                RequiresSimplePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+                RequiresSimplePermission(permission.WRITE_EXTERNAL_STORAGE) {
                     AddTitleAlertDialog(
-                        onDismissRequest = { viewModel.handlerAction(EditDocUIAction.OnExportDismissClicked) },
+                        onDismissRequest = { viewModel.handlerAction(OnExportDismissClicked) },
                         onConfirmation = {
-                            viewModel.handlerAction(EditDocUIAction.OnExportDoneClick)
+                            viewModel.handlerAction(OnExportDoneClick)
                             onDialogExportConfirmationClicked(
                                 fileName = fileName,
                                 context = context,
@@ -103,11 +129,11 @@ internal fun EditDocScreen(
                                             "Algo fue mal al crear el documento"
                                         },
                                         scope = scope,
-                                        snackBarHostState = snackbarHostState
+                                        snackBarHostState = snackBarHostState
                                     )
                                 },
                                 onError = {
-                                    viewModel.handlerAction(EditDocUIAction.OnExportError("Introduce un nombre válido para el documento."))
+                                    viewModel.handlerAction(OnExportError("Introduce un nombre válido para el documento."))
                                 }
                             )
                         },
@@ -120,12 +146,12 @@ internal fun EditDocScreen(
             }
         }
 
-        is EditDocUiState.AlertDialogSaveDoc ->
-            if ((uiStateView.uiState as EditDocUiState.AlertDialogSaveDoc).visible) {
+        is AlertDialogSaveDoc ->
+            if ((uiStateView.uiState as AlertDialogSaveDoc).visible) {
                 AddTitleAlertDialog(
-                    onDismissRequest = { viewModel.handlerAction(EditDocUIAction.OnSavedDismissClicked) },
+                    onDismissRequest = { viewModel.handlerAction(OnSavedDismissClicked) },
                     onConfirmation = {
-                        viewModel.handlerAction(EditDocUIAction.OnSavedDoneClick(fileName))
+                        viewModel.handlerAction(OnSavedDoneClick(fileName))
                         navigateTo(Storage.route)
                     },
                     dialogTitle = "Titulo.",
@@ -135,29 +161,32 @@ internal fun EditDocScreen(
                 )
             }
 
-        is EditDocUiState.Loading -> CustomCircularProgressBar()
+        is Loading -> CustomCircularProgressBar()
 
-        is EditDocUiState.OnSharedClick -> {
+        is OnSharedClick -> {
             shareText(context = context, textState = uiStateView.documentItem.body)
         }
 
-        is EditDocUiState.OnSnackBar -> {
+        is OnSnackBar -> {
             snackBarLauncher(
-                text = (uiStateView.uiState as EditDocUiState.OnSnackBar).text,
+                text = (uiStateView.uiState as OnSnackBar).text,
                 scope = scope,
-                snackBarHostState = snackbarHostState
+                snackBarHostState = snackBarHostState
             )
         }
 
-        EditDocUiState.Initialize -> {
+        Initialize -> {
             if (text.isNotEmpty()) {
-                viewModel.handlerAction(EditDocUIAction.Initialized(id, text))
+                viewModel.handlerAction(Initialized(id, text))
             }
             CustomCircularProgressBar()
         }
 
-        EditDocUiState.TextUpdated -> Unit
-        EditDocUiState.Error ->Unit
+        TextUpdated -> Unit
+        Error -> Unit
+        is OnTextToSpeechClicked -> {
+            SpeechText( (uiStateView.uiState as OnTextToSpeechClicked).text, textToSpeech)
+        }
     }
 
     EditDocument(
@@ -168,7 +197,21 @@ internal fun EditDocScreen(
         onClick = { action -> viewModel.handlerAction(action) },
     )
 
-    SnackbarHost(hostState = snackbarHostState)
+    SnackbarHost(hostState = snackBarHostState)
+}
+
+@Composable
+private fun SpeechText(
+    text: String,
+    textToSpeech: TextToSpeech
+) {
+    // Check if user hasn't input any text.
+    if (text.isNotEmpty()) {
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "tts1")
+    } else {
+        Toast.makeText(LocalContext.current, "Text cannot be empty", Toast.LENGTH_LONG)
+            .show()
+    }
 }
 
 private fun shareText(textState: String, context: Context) {
@@ -233,10 +276,13 @@ private fun AccordionVerticalButtonBar(
     onClick: (EditDocUIAction) -> Unit
 ) {
     var visible by remember { mutableStateOf(false) }
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(MaterialTheme.colorScheme.background)
+    ElevatedCard(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
     ) {
         Column(
             modifier = modifier
@@ -259,7 +305,7 @@ private fun AccordionVerticalButtonBar(
                     Icon(
                         modifier = modifier
                             .size(38.dp)
-                            .clickable { onClick(EditDocUIAction.OnSaveClick) },
+                            .clickable { onClick(OnSaveClick) },
                         imageVector = Icons.Default.Save, contentDescription = "Settings",
                         tint = SaveIcon
 
@@ -267,7 +313,7 @@ private fun AccordionVerticalButtonBar(
                     Icon(
                         modifier = modifier
                             .size(38.dp)
-                            .clickable { onClick(EditDocUIAction.OnShareClick) },
+                            .clickable { onClick(OnShareClick) },
                         imageVector = Icons.Default.Share,
                         contentDescription = "Settings",
                         tint = ShareIcon
@@ -275,9 +321,17 @@ private fun AccordionVerticalButtonBar(
                     Icon(
                         modifier = modifier
                             .size(38.dp)
-                            .clickable { onClick(EditDocUIAction.OnExportClick) },
+                            .clickable { onClick(OnExportClick) },
                         imageVector = Icons.Default.ImportExport,
                         contentDescription = "Settings",
+                        tint = ExportIcon
+                    )
+                    Icon(
+                        modifier = modifier
+                            .size(38.dp)
+                            .clickable { onClick(OnSpokenText) },
+                        imageVector = TwoTone.SpeakerPhone,
+                        contentDescription = "Speek",
                         tint = ExportIcon
                     )
                 }

@@ -17,6 +17,7 @@
 package com.sofiyavolkovaproyects.texthunter.ui
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
@@ -35,9 +36,22 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Stora
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.navigatePopUpToStartDestination
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val textToSpeechEngine: TextToSpeech by lazy {
+        // Pass in context and the listener.
+        TextToSpeech(
+            this
+        ) { status ->
+            // set our locale only if init was success.
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeechEngine.language = Locale(Locale.getDefault().language)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +87,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { padding ->
-                    NavHostContainer(Modifier.padding(padding), navController)
+                    NavHostContainer(Modifier.padding(padding), navController, textToSpeechEngine)
                 }
             }
         }
