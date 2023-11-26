@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaproyects.texthunter.data.DocumentsRepository
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocSideEffect.OnSharedClick
+import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocSideEffect.OnTextToSpeechClicked
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.Initialized
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportClick
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnExportDismissClicked
@@ -18,13 +20,13 @@ import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUIAction.OnTextCha
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialogExportDoc
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.AlertDialogSaveDoc
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.Error
-import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnSharedClick
-import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.OnTextToSpeechClicked
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocUiState.TextUpdated
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,6 +43,9 @@ class EditTextViewModel @Inject constructor(
     // The UI collects from this StateFlow to get its state updates
     val uiState: StateFlow<EditDocUiStateView> by lazy { _uiState }
 
+    private val _effect: Channel<EditDocSideEffect> = Channel()
+    val effect = _effect.receiveAsFlow()
+
     private fun addDocument(documentItem: DocumentItem) {
         viewModelScope.launch {
             savedDocsRepository.add(documentItem)
@@ -50,7 +55,7 @@ class EditTextViewModel @Inject constructor(
     fun handlerAction(action: EditDocUIAction) {
         when (action) {
             OnSaveClick -> updateState { AlertDialogSaveDoc(true) }
-            is OnShareClick -> updateState { OnSharedClick }
+            is OnShareClick -> setEffect(OnSharedClick)
             OnExportClick -> updateState {
                 AlertDialogExportDoc(true)
             }
@@ -96,7 +101,7 @@ class EditTextViewModel @Inject constructor(
                 }
             }
 
-            OnSpokenText -> updateState { OnTextToSpeechClicked(_uiState.value.documentItem.body) }
+            OnSpokenText -> setEffect(OnTextToSpeechClicked(uiState.value.documentItem.body) )
         }
     }
 
@@ -108,6 +113,10 @@ class EditTextViewModel @Inject constructor(
         _uiState.update { it.copy(documentItem = documentItem, uiState = TextUpdated) }
     }
 
+    private fun setEffect(effect: EditDocSideEffect) {
+        viewModelScope.launch { _effect.send(effect) }
+    }
+
 }
 
 data class EditDocUiStateView(
@@ -115,17 +124,19 @@ data class EditDocUiStateView(
     val uiState: EditDocUiState = EditDocUiState.Initialize
 )
 
+sealed interface EditDocSideEffect {
+    data object OnSharedClick : EditDocSideEffect
+    data class OnTextToSpeechClicked(val text: String) : EditDocSideEffect
+}
+
 sealed interface EditDocUiState {
     data object Loading : EditDocUiState
     data class AlertDialogSaveDoc(val visible: Boolean = false) : EditDocUiState
     data class AlertDialogExportDoc(val visible: Boolean = false, val message: String = "") :
         EditDocUiState
 
-    data object OnSharedClick : EditDocUiState
     data class OnSnackBar(val text: String) : EditDocUiState
     data object Initialize : EditDocUiState
     data object TextUpdated : EditDocUiState
     data object Error : EditDocUiState
-
-    data class OnTextToSpeechClicked(val text: String) : EditDocUiState
 }

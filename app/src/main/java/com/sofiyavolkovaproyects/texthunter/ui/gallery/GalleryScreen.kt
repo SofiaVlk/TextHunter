@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,46 +51,54 @@ import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresMediaImagesPermission
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GallerySideEffect.CaptureText
+import com.sofiyavolkovaproyects.texthunter.ui.gallery.GallerySideEffect.NavigateToEdit
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUIAction.OnErrorText
-import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUIAction.OnInitialize
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUIAction.OnSuccessText
-import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.CaptureText
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Empty
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Error
-import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Initialize
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Loading
-import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.NavigateToEdit
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Success
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.textRecognizerProcess
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 
 @Composable
-fun GalleryScreen(modifier: Modifier = Modifier,
+fun GalleryScreen(
  navigateTo: (String) -> Unit = {},
  viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val galleryState by viewModel.uiState.collectAsStateWithLifecycle()
+    val effectFlow = viewModel.effect
     val context = LocalContext.current
 
     var mediaList: List<Media> by remember {
         mutableStateOf(emptyList())
     }
-    RequiresMediaImagesPermission {
 
+    // Listen for side effects from the VM
+    LaunchedEffect(true) {
+        effectFlow.onEach { effect ->
+            when (effect) {
+                is NavigateToEdit -> navigateTo(EditText.createNavTextRoute(effect.text))
+                is CaptureText -> {
+                    context.textRecognizerProcess(effect.uri)
+                        .addOnSuccessListener { result ->
+                            viewModel.handlerAction(OnSuccessText(result.text))
+                        }.addOnFailureListener {
+                            viewModel.handlerAction(OnErrorText)
+                        }
+                }
+            }
+        }.collect()
+    }
+
+    RequiresMediaImagesPermission {
 
         when (galleryState) {
             Loading -> CustomCircularProgressBar()
             is Success -> mediaList = (galleryState as Success).mediaList
-            is NavigateToEdit ->  navigateTo((galleryState as NavigateToEdit).text)
-
-            is CaptureText ->{
-                context.textRecognizerProcess((galleryState as CaptureText).uri)
-                    .addOnSuccessListener {
-                    result ->
-                        viewModel.handlerAction(OnSuccessText(result.text))
-                }.addOnFailureListener{
-                   viewModel.handlerAction(OnErrorText)
-                }
-            }
 
             Error -> InfoMessage(
                 imagePainter = painterResource(drawable.error_message_01),
@@ -100,12 +109,9 @@ fun GalleryScreen(modifier: Modifier = Modifier,
                 title = "No se encuentran fotografia guardadas.",
                 bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas."
             )
-
-            Initialize -> viewModel.handlerAction(OnInitialize)
         }
 
         PhotoGrid(
-            modifier = modifier,
             photos = mediaList,
             onClickItem = {action ->
                 viewModel.handlerAction(action)}
@@ -117,8 +123,6 @@ fun GalleryScreen(modifier: Modifier = Modifier,
 @Composable
 fun PhotoGrid(
     photos: List<Media>,
-    modifier: Modifier = Modifier,
-    borderColor: Color = MaterialTheme.colorScheme.background,
     onClickItem: (GalleryUIAction) -> Unit = {}
 ) {
     val primaryColor = MaterialTheme.colorScheme.primary

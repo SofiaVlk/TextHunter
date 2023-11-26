@@ -8,5 +8,4 @@ sealed interface GalleryUIAction {
     data class OnClickCaptureImage(val uri: Uri) : GalleryUIAction
     data object OnErrorText : GalleryUIAction
     data class OnSuccessText(val text : String): GalleryUIAction
-    data object OnInitialize : GalleryUIAction
 }
