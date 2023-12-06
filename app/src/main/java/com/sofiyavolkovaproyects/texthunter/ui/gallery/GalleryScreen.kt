@@ -128,10 +128,13 @@ fun GalleryScreen(
                 bodyText = stringResource(string.th_error_body_message)
             )
             //Muestra un mensaje de que no se han encontrado imágenes guardadas.
-            Empty -> InfoMessage(
-                title = stringResource(string.th_gallery_screen_empty_message_title),
-                bodyText = stringResource(string.th_gallery_screen_empty_message_body)
-            )
+            Empty -> {
+                mediaList = emptyList()
+                InfoMessage(
+                    title = stringResource(string.th_gallery_screen_empty_message_title),
+                    bodyText = stringResource(string.th_gallery_screen_empty_message_body)
+                )
+            }
         }
     //Muestra una galería de imágenes
         PhotoGrid(
