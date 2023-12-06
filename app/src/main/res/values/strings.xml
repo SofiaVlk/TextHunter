@@ -40,5 +40,6 @@
     <string name="th_edit_doc_screen_share_text_type">text/plain</string>
     <string name="th_hunter_screen_image_capture_error">"ERROR CAPTURE CAMERA: "</string>
     <string name="th_hunter_screen_image_uri">"Image Uri Captured from Camera View in: "</string>
-    <string name="th_save_docs_screen_info_message_error">Error</string>
+    <string name="th_saved_docs_screen_no_saved_docs_message_title">No se han encontrado documentos guardados.</string>
+    <string name="th_saved_docs_screen_no_saved_docs_body_message">En esta sección se mostrarán los textos capturados que haya decidido guardar.</string>
 </resources>

@@ -67,12 +67,12 @@ fun SavedDocsScreen(
         Loading -> CustomCircularProgressBar()
         Error -> InfoMessage(
             imagePainter = painterResource(R.drawable.error_message_01),
-            title = stringResource(string.th_save_docs_screen_info_message_error),
-            bodyText = "Lo sentimos, parece que hemos tenido un error inesperado."
+            title = stringResource(string.th_error_title),
+            bodyText = stringResource(string.th_error_body_message)
         )
         Empty -> InfoMessage(
-            title = "Documentos no encontadros",
-            bodyText = "En esta sección se se mostrarán los textos capturados que haya decidido guardar"
+            title = stringResource(string.th_saved_docs_screen_no_saved_docs_message_title),
+            bodyText = stringResource(string.th_saved_docs_screen_no_saved_docs_body_message)
         )
     }
 
