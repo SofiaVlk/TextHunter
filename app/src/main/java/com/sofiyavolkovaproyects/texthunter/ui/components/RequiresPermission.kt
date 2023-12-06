@@ -12,6 +12,7 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
+//Solicita permiso
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun RequiresSimplePermission(

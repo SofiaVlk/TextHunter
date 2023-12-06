@@ -4,10 +4,11 @@ import android.speech.tts.TextToSpeech
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.sofiyavolkovaproyects.texthunter.R.drawable
+import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.editDoc.EditDocScreen
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryScreen
@@ -15,6 +16,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.hunter.HunterScreen
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.UidNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.EditText
+import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Error
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Hunter
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Storage
@@ -33,14 +35,16 @@ fun NavHostContainer(
         modifier = modifier,
         builder = {
 
+            //Navega a la ruta establecida, si hay un error, muestra un pantalla genérica de error.
             val navigator: (String) -> Unit = {
                 try {
                     navController.navigate(it)
                 } catch (e: Exception) {
-                    navController.navigate("Error")
+                    navController.navigate(Error.route)
                 }
             }
 
+            //Se configura el composable que tiene que cargarse según la ruta
             composable(route = Storage.route) {
                 SavedDocsScreen(modifier = modifier, navigateTo = navigator)
             }
@@ -54,11 +58,12 @@ fun NavHostContainer(
             composable(route = Hunter.route) {
                 HunterScreen(modifier = modifier, navigateTo = navigator)
             }
-            composable(route = "Error") {
+
+            composable(route = Error.route) {
                 InfoMessage(
-                    imagePainter = painterResource(drawable.error_message_01),
-                    title = "Error",
-                    bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+                    imagePainter = painterResource(R.drawable.error_message_01),
+                    title =  Error.route.capitalizeConstant(),
+                    bodyText = stringResource(R.string.th_error_body_message)
                 )
             }
 

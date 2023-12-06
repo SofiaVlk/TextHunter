@@ -19,4 +19,26 @@
     <string name="icn_camera_view_view_gallery_content_description">\n</string>
     <string name="icn_camera_view_camera_shutter_content_description" />
     <string name="icn_camera_view_switch_camera_content_description" />
+    <string name="th_fab_text">Capture</string>
+    <string name="th_error_body_message">Lo sentimos parece que hemos tenido un error inesperado.</string>
+    <string name="th_error_title">Error</string>
+    <string name="th_gallery_screen_empty_message_title">No se encuentran fotografia guardadas.</string>
+    <string name="th_gallery_screen_empty_message_body">Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas.</string>
+    <string name="th_edit_doc_screen_dialog_text">Introduce el nombre del documento. \n ejemplo: NombreDoc.txt</string>
+    <string name="th_edit_doc_screen_success_message">Fichero guardado con exito en Download</string>
+    <string name="th_edit_doc_screen_error_message">Algo fue mal al crear el documento</string>
+    <string name="th_edit_doc_screen_error_valid_doc_name">Introduce un nombre válido del documento.</string>
+    <string name="th_edit_doc_screen_doc_title">Nombre del documento</string>
+    <string name="th_edit_doc_screen_placeholder_export_doc_name">NombreDocumento.txt</string>
+    <string name="th_edit_doc_screen_save_dialog_title">Titulo.</string>
+    <string name="th_edit_doc_screen_dialog_save_text_title">Añade un titulo para el texto.</string>
+    <string name="th_edit_doc_screen_save_placeholder_doc_name">NombreDocumento</string>
+    <string name="th_edit_doc_screen_toast_not_empty">Text cannot be empty</string>
+    <string name="th_edit_doc_screen_doc_header">Titulo</string>
+    <string name="th_edit_doc_screen_settings">Settings</string>
+    <string name="th_edit_doc_screen_speek">Speek</string>
+    <string name="th_edit_doc_screen_share_text_type">text/plain</string>
+    <string name="th_hunter_screen_image_capture_error">"ERROR CAPTURE CAMERA: "</string>
+    <string name="th_hunter_screen_image_uri">"Image Uri Captured from Camera View in: "</string>
+    <string name="th_save_docs_screen_info_message_error">Error</string>
 </resources>

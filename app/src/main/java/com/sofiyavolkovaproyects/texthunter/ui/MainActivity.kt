@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sofiyavolkovaproyects.texthunter.R.string
 import com.sofiyavolkovaproyects.texthunter.ui.components.BottomNavigationBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.FloatingButtonCam
 import com.sofiyavolkovaproyects.texthunter.ui.components.MainAppBar
@@ -36,7 +37,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Stora
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.navigatePopUpToStartDestination
 import com.sofiyavolkovaproyects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -56,37 +57,49 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //Establece un contenedor
         setContent {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route ?: ""
 
+            //Establece las configuraciones globales de la vista
             TextHunterApp {
+                //Composable en el que se configuran diferentes elementos de la vista
                 Scaffold(
                     topBar = {
                         MainAppBar(currentRoute = currentRoute, mainRoute = Storage.route) {
+                            //Si hacemos click en la flecha de retroceso navegamos hacia atrás
                             navController.popBackStack()
                         }
                     },
                     bottomBar = {
+                        //Establece una barra de navegación inferior en todas las pantallas menos
+                        //en la de Editar documento
                         if (currentRoute != EditText.route) {
+                            //Barra inferior de navegación con las pantallas principales
                             BottomNavigationBar(currentRoute) {
+                                //se navega a la ruta seleccionada
                                 navController.navigatePopUpToStartDestination(it)
                             }
                         }
                     },
+                    //Configura FAB
                     floatingActionButton = {
+                        //Solo se  muestra el FAB en la pantalla de Storage
                         if (currentRoute == Storage.route) {
                             FloatingButtonCam(
-                                text = "Capture",
+                                text = getString(string.th_fab_text),
                                 expanded = true,
                                 onClick = {
+                                    //se navega siempre a la pantalla Hunter
                                     navController.navigatePopUpToStartDestination(Hunter.route)
                                 }
                             )
                         }
                     }
                 ) { padding ->
+                    //Establece la navegación y pinta los contenidos
                     NavHostContainer(Modifier.padding(padding), navController, textToSpeechEngine)
                 }
             }

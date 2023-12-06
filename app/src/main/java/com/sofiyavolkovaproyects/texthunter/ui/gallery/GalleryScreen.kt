@@ -40,12 +40,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.sofiyavolkovaproyects.texthunter.R.drawable
+import com.sofiyavolkovaproyects.texthunter.R.string
 import com.sofiyavolkovaproyects.texthunter.modelo.Media
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
@@ -66,27 +68,39 @@ import kotlinx.coroutines.flow.onEach
 
 @Composable
 fun GalleryScreen(
+  //Acción de navegación
  navigateTo: (String) -> Unit = {},
+ //se inyecta el viewmodel
  viewModel: GalleryViewModel = hiltViewModel()
 ) {
     val galleryState by viewModel.uiState.collectAsStateWithLifecycle()
     val effectFlow = viewModel.effect
     val context = LocalContext.current
 
+    //Recuerda el estado. Por defecto tiene el valor de una lista vacía de Media.
     var mediaList: List<Media> by remember {
         mutableStateOf(emptyList())
     }
 
-    // Listen for side effects from the VM
+    // Escucha efectos secundarios del viewmodel
+    //Se lanza una vez
     LaunchedEffect(true) {
+        //Dependiendo del efecto que se ha ejecutado, realiza una acción
         effectFlow.onEach { effect ->
             when (effect) {
+                //Navega a la pantalla de EditText pasandole por parametro el texto extraido
                 is NavigateToEdit -> navigateTo(EditText.createNavTextRoute(effect.text))
+                //Extrae el texto de la imagen seleccionada en la galeria
                 is CaptureText -> {
                     context.textRecognizerProcess(effect.uri)
                         .addOnSuccessListener { result ->
+                            //Si ha ido bien: se comunica con el vm através de una acción indicando
+                            // que la extracción del texto ha sido correcta
+                            //y le pasa por construcción ese texto
                             viewModel.handlerAction(OnSuccessText(result.text))
                         }.addOnFailureListener {
+                            //En el caso de errro, avisa al vm por medio de la acción de que
+                            // ha surgido un error al extraer el texto
                             viewModel.handlerAction(OnErrorText)
                         }
                 }
@@ -94,23 +108,32 @@ fun GalleryScreen(
         }.collect()
     }
 
+    /*
+    Comprueba si hay permiso para accedr a la galería, de lo contrario, muestra un pop-up
+    solicitando aprobación para estos permisos. Si los permisos están concedidos pinta el contenido
+     */
     RequiresMediaImagesPermission {
 
+        //Evalua el estado de la pantalla
         when (galleryState) {
+            //Si está en el estado Loading, se muestra la animación de barra circular
             Loading -> CustomCircularProgressBar()
+           //Si ha recuperado las imagenes con exito, vuelca la respuesta en una variable de estado que servirá para pintar la galería de imágenes
             is Success -> mediaList = (galleryState as Success).mediaList
 
+            //Muestra un mensaje de error
             Error -> InfoMessage(
                 imagePainter = painterResource(drawable.error_message_01),
-                title = "Error",
-                bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+                title = stringResource(string.th_error_title),
+                bodyText = stringResource(string.th_error_body_message)
             )
+            //Muestra un mensaje de que no se han encontrado imágenes guardadas.
             Empty -> InfoMessage(
-                title = "No se encuentran fotografia guardadas.",
-                bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas."
+                title = stringResource(string.th_gallery_screen_empty_message_title),
+                bodyText = stringResource(string.th_gallery_screen_empty_message_body)
             )
         }
-
+    //Muestra una galería de imágenes
         PhotoGrid(
             photos = mediaList,
             onClickItem = {action ->
@@ -137,6 +160,7 @@ fun PhotoGrid(
         items(photos) { media ->
             val isItemSelected = itemSelected == media.name
             Box(modifier = Modifier.animateItemPlacement()) {
+               //Componenete de la librería Coil para mostrar imágenes de forma asíncrona
                 AsyncImage(
                     modifier = Modifier
                         .padding(5.dp)
@@ -159,7 +183,7 @@ fun PhotoGrid(
                     contentDescription = media.name,
                     contentScale = ContentScale.Crop
                 )
-
+                //Muestra una animación cuando isItemSelected es verdadero
                 AnimatedVisibility(
                     visible = isItemSelected,
                     enter = fadeIn() + slideInVertically(

@@ -12,6 +12,7 @@ import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Error
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Loading
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
@@ -35,13 +35,15 @@ class GalleryViewModel @Inject constructor(
         _uiState.update { Loading }
         getGalleryImages()
     }
-
+//recupera del ropositorio una lista de imágenes
     private fun getGalleryImages() {
         viewModelScope.launch {
             imagesRepository.getImages()
                 .catch { _uiState.update { Error } }
                 .collect { imageList ->
                     _uiState.update {
+                        /*si se han recuperado imágenes y la lista está vacía, establecemos el estado a vacío,
+                        estado se pone a success*/
                         if (imageList.isNotEmpty()) {
                             Success(imageList)
                         } else {
@@ -83,12 +85,12 @@ class GalleryViewModel @Inject constructor(
         viewModelScope.launch { _effect.send(effect) }
     }
 }
-
+//Selección de efectos para galleryscreen
 sealed interface GallerySideEffect {
     data class NavigateToEdit(val text: String) : GallerySideEffect
     data class CaptureText(val uri: Uri) : GallerySideEffect
 }
-
+//Estados para galleryscreen
 sealed interface GalleryUiState {
     data object Loading : GalleryUiState
     data class Success(val mediaList: List<Media>) : GalleryUiState

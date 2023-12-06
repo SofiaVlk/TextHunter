@@ -6,12 +6,17 @@ import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.TextNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavArg.UidNavArg
 import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavData.BottomItemNavData
-import java.util.*
+import java.util.Locale
 
-const val GALLERY_ROUTE = "gallery"
-const val HUNTER_ROUTE = "hunter"
-const val STORAGE_ROUTE = "storage"
-const val EDIT_TEXT_ROUTE = "editText"
+private const val GALLERY_ROUTE = "gallery"
+private const val HUNTER_ROUTE = "hunter"
+private const val STORAGE_ROUTE = "storage"
+private const val EDIT_TEXT_ROUTE = "editText"
+private const val ERROR_ROUTE = "error"
+private const val EMPTY = "Empty"
+private const val TEXT = "text"
+private const val ID = "id"
+
 
 sealed class NavigationParams(
     var baseRoute: String,
@@ -47,15 +52,16 @@ sealed class NavigationParams(
         baseRoute = EDIT_TEXT_ROUTE,
         navArgs = listOf(TextNavArg, UidNavArg),
     )
-    fun createNavTextRoute(text: String = "Empty", id: Int = -1) = "$baseRoute/$text/$id"
+    data object Error : NavigationParams(
+        baseRoute = ERROR_ROUTE
+    )
 
+    fun createNavTextRoute(text: String = EMPTY, id: Int = -1) = "$baseRoute/$text/$id"
 }
 
 enum class NavArg(val key: String, val navType: NavType<*>) {
-    IconNavArg(key = "icon", NavType.IntType),
-    TitleNavArg(key = "title", NavType.StringType),
-    TextNavArg(key = "text", NavType.StringType),
-    UidNavArg(key = "id", NavType.IntType)
+    TextNavArg(key = TEXT, NavType.StringType),
+    UidNavArg(key = ID, NavType.IntType)
 }
 
 sealed class NavData {

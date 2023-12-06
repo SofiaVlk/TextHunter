@@ -8,9 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaproyects.texthunter.R.drawable
+import com.sofiyavolkovaproyects.texthunter.R.string
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
@@ -46,6 +48,8 @@ fun HunterScreenView(
     navigateTo: (String) -> Unit
 ) {
     val context = LocalContext.current
+    val imageCaptureError = stringResource(string.th_hunter_screen_image_capture_error)
+    val imageUri = stringResource(string.th_hunter_screen_image_uri)
     when (uiState) {
         HunterUiState.Loading -> CustomCircularProgressBar()
         is HunterUiState.NavigateToEdit -> {
@@ -56,7 +60,7 @@ fun HunterScreenView(
         }
         HunterUiState.Initial -> CameraView(
             onImageCaptured = { uri, _ ->
-                Log.d(TAG, "Image Uri Captured from Camera View in: " + uri.path)
+                Log.d(TAG, imageUri + uri.path)
                 onActionEvent(HunterUiAction.OnCapturedButtonClick)
                 try {
                     context.textRecognizerProcess(uri)
@@ -70,15 +74,15 @@ fun HunterScreenView(
                     onActionEvent(HunterUiAction.ErrorImage)
                 }
             }, onError = { imageCaptureException ->
-                Log.d(TAG, "ERROR CAPTURE CAMERA: " + imageCaptureException.message)
+                Log.d(TAG, imageCaptureError + imageCaptureException.message)
                 onActionEvent(HunterUiAction.ErrorImage)
             }
         )
 
         HunterUiState.ErrorScreen -> InfoMessage(
             imagePainter = painterResource(drawable.error_message_01),
-            title = "Error",
-            bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+            title = stringResource(string.th_error_title),
+            bodyText = stringResource(string.th_error_body_message)
         )
     }
 

@@ -18,6 +18,6 @@ package com.sofiyavolkovaproyects.texthunter
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-
+//Declara la aplicación. Se configura la inyección de dependencias
 @HiltAndroidApp
 class TextHunter : Application()

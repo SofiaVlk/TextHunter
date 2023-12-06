@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaproyects.texthunter.R
 import com.sofiyavolkovaproyects.texthunter.R.drawable
+import com.sofiyavolkovaproyects.texthunter.R.string
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage
@@ -65,8 +67,8 @@ fun SavedDocsScreen(
         Loading -> CustomCircularProgressBar()
         Error -> InfoMessage(
             imagePainter = painterResource(R.drawable.error_message_01),
-            title = "Error",
-            bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
+            title = stringResource(string.th_save_docs_screen_info_message_error),
+            bodyText = "Lo sentimos, parece que hemos tenido un error inesperado."
         )
         Empty -> InfoMessage(
             title = "Documentos no encontadros",

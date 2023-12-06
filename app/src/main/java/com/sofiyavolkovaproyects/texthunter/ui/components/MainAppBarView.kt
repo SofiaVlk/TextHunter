@@ -55,6 +55,7 @@ internal fun MainAppBar(
             )
         },
         navigationIcon = {
+            //No mostramos la flecha de retroceso si estamos en la primera pantalla
             if (currentRoute != mainRoute) {
                 AppbarAction(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,

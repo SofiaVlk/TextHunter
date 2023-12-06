@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+//Diseño del item para mostrar el texto en la panralla de Storage
 @Composable
 @Preview(showBackground = true)
 private fun SavedTextItemSample() {

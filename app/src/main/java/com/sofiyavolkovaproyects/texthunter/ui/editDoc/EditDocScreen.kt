@@ -51,12 +51,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sofiyavolkovaproyects.texthunter.R
+import com.sofiyavolkovaproyects.texthunter.R.string
 import com.sofiyavolkovaproyects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.RequiresSimplePermission
@@ -83,15 +86,15 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Stora
 import com.sofiyavolkovaproyects.texthunter.ui.theme.ExportIcon
 import com.sofiyavolkovaproyects.texthunter.ui.theme.SaveIcon
 import com.sofiyavolkovaproyects.texthunter.ui.theme.ShareIcon
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.FileWriter
-import java.util.*
+import java.util.Locale
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -107,9 +110,12 @@ internal fun EditDocScreen(
 
     val context = LocalContext.current
     var fileName = ""
-    val dialogText = "Introduce el nombre del documento de texto. \n ejemplo: NombreDoc.txt"
+    val dialogText = stringResource(string.th_edit_doc_screen_dialog_text)
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+    val successMessageEditDoc = stringResource(R.string.th_edit_doc_screen_success_message)
+    val errorMessageEditDoc =  stringResource(string.th_edit_doc_screen_error_message)
+    val errorValidDocName = stringResource(string.th_edit_doc_screen_error_valid_doc_name)
 
     LaunchedEffect(true) {
         effectFlow.onEach { effect ->
@@ -141,22 +147,22 @@ internal fun EditDocScreen(
                                 onSuccess = { isSuccess ->
                                     snackBarLauncher(
                                         text = if (isSuccess) {
-                                            "Fichero guardado con exito en Download"
+                                            successMessageEditDoc
                                         } else {
-                                            "Algo fue mal al crear el documento"
+                                            errorMessageEditDoc
                                         },
                                         scope = scope,
                                         snackBarHostState = snackBarHostState
                                     )
                                 },
                                 onError = {
-                                    viewModel.handlerAction(OnExportError("Introduce un nombre válido para el documento."))
+                                    viewModel.handlerAction(OnExportError(errorValidDocName))
                                 }
                             )
                         },
-                        dialogTitle = "Nombre del documento",
+                        dialogTitle = stringResource(string.th_edit_doc_screen_doc_title),
                         dialogText = alertDialogExportDoc.message.ifEmpty { dialogText },
-                        placeholder = "NombreDocumento.txt",
+                        placeholder = stringResource(string.th_edit_doc_screen_placeholder_export_doc_name),
                         onValueChange = { name -> fileName = name }
                     )
                 }
@@ -171,9 +177,9 @@ internal fun EditDocScreen(
                         viewModel.handlerAction(OnSavedDoneClick(fileName))
                         navigateTo(Storage.route)
                     },
-                    dialogTitle = "Titulo.",
-                    dialogText = "Añade un titulo para el texto.",
-                    placeholder = "NombreDocumento",
+                    dialogTitle = stringResource(string.th_edit_doc_screen_save_dialog_title),
+                    dialogText = stringResource(string.th_edit_doc_screen_dialog_save_text_title),
+                    placeholder = stringResource(string.th_edit_doc_screen_save_placeholder_doc_name),
                     onValueChange = { name -> fileName = name }
                 )
             }
@@ -216,11 +222,12 @@ private fun speechText(
     text: String,
     textToSpeech: TextToSpeech
 ) {
-    // Check if user hasn't input any text.
+    // Comprueba si el usuario no ha introducido ningún texto
     if (text.isNotEmpty()) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "tts1")
     } else {
-        Toast.makeText(context, "Text cannot be empty", Toast.LENGTH_LONG)
+        Toast.makeText(context,
+            context.getString(string.th_edit_doc_screen_toast_not_empty), Toast.LENGTH_LONG)
             .show()
     }
 }
@@ -229,7 +236,7 @@ private fun shareText(textState: String, context: Context) {
     val sendIntent: Intent = Intent().apply {
         this.action = Intent.ACTION_SEND
         putExtra(Intent.EXTRA_TEXT, textState)
-        type = "text/plain"
+        type = context.getString(string.th_edit_doc_screen_share_text_type)
     }
     val shareIntent = Intent.createChooser(sendIntent, null)
     context.startActivity(shareIntent)
@@ -272,7 +279,7 @@ private fun Header(
     ) {
         Text(
             modifier = Modifier.weight(1f),
-            text = title.ifEmpty { "Titulo" },
+            text = title.ifEmpty { stringResource(string.th_edit_doc_screen_doc_header) },
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center
         )
@@ -305,7 +312,7 @@ private fun AccordionVerticalButtonBar(
                     .size(38.dp)
                     .clickable { visible = !visible },
                 imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
+                contentDescription = stringResource(string.th_edit_doc_screen_settings),
                 tint = MaterialTheme.colorScheme.primary
 
             )
@@ -317,7 +324,7 @@ private fun AccordionVerticalButtonBar(
                         modifier = modifier
                             .size(38.dp)
                             .clickable { onClick(OnSaveClick) },
-                        imageVector = Icons.Default.Save, contentDescription = "Settings",
+                        imageVector = Icons.Default.Save, contentDescription = stringResource(string.th_edit_doc_screen_settings),
                         tint = SaveIcon
 
                     )
@@ -326,7 +333,7 @@ private fun AccordionVerticalButtonBar(
                             .size(38.dp)
                             .clickable { onClick(OnShareClick) },
                         imageVector = Icons.Default.Share,
-                        contentDescription = "Settings",
+                        contentDescription = stringResource(string.th_edit_doc_screen_settings),
                         tint = ShareIcon
                     )
                     Icon(
@@ -334,7 +341,7 @@ private fun AccordionVerticalButtonBar(
                             .size(38.dp)
                             .clickable { onClick(OnExportClick) },
                         imageVector = Icons.Default.ImportExport,
-                        contentDescription = "Settings",
+                        contentDescription = stringResource(string.th_edit_doc_screen_settings),
                         tint = ExportIcon
                     )
                     Icon(
@@ -342,7 +349,7 @@ private fun AccordionVerticalButtonBar(
                             .size(38.dp)
                             .clickable { onClick(OnSpokenText) },
                         imageVector = TwoTone.SpeakerPhone,
-                        contentDescription = "Speek",
+                        contentDescription = stringResource(string.th_edit_doc_screen_speek),
                         tint = ExportIcon
                     )
                 }

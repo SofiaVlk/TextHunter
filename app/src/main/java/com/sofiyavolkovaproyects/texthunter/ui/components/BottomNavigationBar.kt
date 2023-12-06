@@ -20,15 +20,18 @@ import com.sofiyavolkovaproyects.texthunter.ui.navigation.NavigationParams.Stora
 fun BottomNavigationBar(currentRoute: String, onNavIconClick: (String) -> Unit) {
 
     var itemRoute: String by remember { mutableStateOf("") }
+    //Listado de las pantallas principales
     val items = listOf(
         Storage,
         Gallery,
         Hunter
     )
-
+//Solo cambia de selección cuando estamos navegando entre las pantallas de la botonera
     itemRoute = if (items.any { it.route == currentRoute }) currentRoute else itemRoute
 
+    //Barra inferior de navegación de material3
     NavigationBar {
+        //Se pintan los items / los iconos de la barra de navegación
         items.forEach { item ->
             val data = item.navData as BottomItemNavData
             NavigationBarItem(
