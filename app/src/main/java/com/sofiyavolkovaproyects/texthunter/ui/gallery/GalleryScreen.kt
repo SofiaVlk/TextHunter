@@ -105,10 +105,13 @@ fun GalleryScreen(
                 title = "Error",
                 bodyText = "Lo sentimos parece que hemos tenido un error inesperado."
             )
-            Empty -> InfoMessage(
-                title = "No se encuentran fotografia guardadas.",
-                bodyText = "Según vayas haciendop fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas."
-            )
+            Empty -> {
+                mediaList = emptyList()
+                InfoMessage(
+                    title = "No se encuentran fotografia guardadas.",
+                    bodyText = "Según vayas haciendo fotografias para capturar textos se irán mostrando en esta sección, podra volver a utilizar la imagen para extraer su texto o eliminarla si no la necesita mas."
+                )
+            }
         }
 
         PhotoGrid(
