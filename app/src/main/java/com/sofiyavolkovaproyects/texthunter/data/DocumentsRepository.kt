@@ -29,6 +29,8 @@ interface DocumentsRepository {
     suspend fun remove(document: DocumentItem)
     }
 
+//Clase de la que obtenemos la información
+
 class DefaultDocumentsRepository @Inject constructor(
     private val docsItemTypeDao: SaveDocDao
 ) : DocumentsRepository {

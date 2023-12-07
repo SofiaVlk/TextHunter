@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaproyects.texthunter.data.DefaultImagesRepository
-import com.sofiyavolkovaproyects.texthunter.modelo.Media
+import com.sofiyavolkovaproyects.texthunter.model.Media
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GallerySideEffect.CaptureText
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GallerySideEffect.NavigateToEdit
 import com.sofiyavolkovaproyects.texthunter.ui.gallery.GalleryUiState.Empty

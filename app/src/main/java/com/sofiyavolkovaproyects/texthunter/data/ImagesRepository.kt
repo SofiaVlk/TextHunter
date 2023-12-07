@@ -1,7 +1,7 @@
 package com.sofiyavolkovaproyects.texthunter.data
 
 import com.sofiyavolkovaproyects.texthunter.data.local.source.THLocalImageSource
-import com.sofiyavolkovaproyects.texthunter.modelo.Media
+import com.sofiyavolkovaproyects.texthunter.model.Media
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

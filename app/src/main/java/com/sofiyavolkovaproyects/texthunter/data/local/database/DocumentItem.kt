@@ -2,7 +2,7 @@ package com.sofiyavolkovaproyects.texthunter.data.local.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+//Estructura de datos o entidad de la tabla
 @Entity
 data class DocumentItem(
     val title: String = "",

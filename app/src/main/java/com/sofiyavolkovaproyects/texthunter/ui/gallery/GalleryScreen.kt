@@ -48,7 +48,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.sofiyavolkovaproyects.texthunter.R.drawable
 import com.sofiyavolkovaproyects.texthunter.R.string
-import com.sofiyavolkovaproyects.texthunter.modelo.Media
+import com.sofiyavolkovaproyects.texthunter.model.Media
 import com.sofiyavolkovaproyects.texthunter.ui.components.ButtonBasic
 import com.sofiyavolkovaproyects.texthunter.ui.components.CustomCircularProgressBar
 import com.sofiyavolkovaproyects.texthunter.ui.components.InfoMessage

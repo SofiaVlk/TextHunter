@@ -18,7 +18,7 @@ package com.sofiyavolkovaproyects.texthunter.data.local.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-
+//Dealaración de la Base de Datos de Room
 @Database(entities = [DocumentItem::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun docsItemTypeDao(): SaveDocDao

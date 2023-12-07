@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.sofiyavolkovaproyects.texthunter.data.local.di.IoDispatcher
-import com.sofiyavolkovaproyects.texthunter.modelo.Media
+import com.sofiyavolkovaproyects.texthunter.model.Media
 import com.sofiyavolkovaproyects.texthunter.ui.hunter.getOutputDirectory
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher

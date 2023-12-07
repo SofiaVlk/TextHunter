@@ -1,7 +1,7 @@
 package com.sofiyavolkovaproyects.texthunter.ui.gallery
 
 import android.net.Uri
-import com.sofiyavolkovaproyects.texthunter.modelo.Media
+import com.sofiyavolkovaproyects.texthunter.model.Media
 
 sealed interface GalleryUIAction {
     data class OnClickDeleteImage(val media: Media) : GalleryUIAction
