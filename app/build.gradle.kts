@@ -24,17 +24,16 @@ plugins {
 }
 
 android {
-    namespace = "com.sofiyavolkovaproyects.texthunter"
+    namespace = "com.sofiyavolkovaprojects.texthunter"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.sofiyavolkovaproyects.texthunter"
+        applicationId = "com.sofiyavolkovaprojects.texthunter"
         minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "com.sofiyavolkovaproyects.texthunter.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
