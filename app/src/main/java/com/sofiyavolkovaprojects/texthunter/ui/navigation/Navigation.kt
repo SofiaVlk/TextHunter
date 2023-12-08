@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sofiyavolkovaprojects.texthunter.R.drawable
 import com.sofiyavolkovaprojects.texthunter.R.string
-import com.sofiyavolkovaprojects.texthunter.ui.components.InfoMessage
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.InfoMessage
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocScreen
 import com.sofiyavolkovaprojects.texthunter.ui.gallery.GalleryScreen
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.HunterScreen

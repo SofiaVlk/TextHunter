@@ -27,15 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sofiyavolkovaprojects.texthunter.R.string
-import com.sofiyavolkovaprojects.texthunter.ui.components.BottomNavigationBar
-import com.sofiyavolkovaprojects.texthunter.ui.components.FloatingButtonCam
-import com.sofiyavolkovaprojects.texthunter.ui.components.MainAppBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.BottomNavigationBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.FloatingButtonCam
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.MainAppBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.theme.TextHunterApp
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavHostContainer
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.EditText
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.Hunter
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.Storage
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.navigatePopUpToStartDestination
-import com.sofiyavolkovaprojects.texthunter.ui.theme.TextHunterApp
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 

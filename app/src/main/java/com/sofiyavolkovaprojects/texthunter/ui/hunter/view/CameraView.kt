@@ -42,7 +42,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.sofiyavolkovaprojects.texthunter.R.string
-import com.sofiyavolkovaprojects.texthunter.ui.components.CustomCircularProgressBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.CameraUIAction
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.getCameraProvider
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.getOutputDirectory

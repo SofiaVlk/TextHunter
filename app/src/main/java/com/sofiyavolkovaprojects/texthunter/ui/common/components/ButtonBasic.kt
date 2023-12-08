@@ -1,4 +1,4 @@
-package com.sofiyavolkovaprojects.texthunter.ui.components
+package com.sofiyavolkovaprojects.texthunter.ui.common.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource

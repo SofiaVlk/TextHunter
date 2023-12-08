@@ -13,9 +13,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaprojects.texthunter.R.drawable
 import com.sofiyavolkovaprojects.texthunter.R.string
-import com.sofiyavolkovaprojects.texthunter.ui.components.CustomCircularProgressBar
-import com.sofiyavolkovaprojects.texthunter.ui.components.InfoMessage
-import com.sofiyavolkovaprojects.texthunter.ui.components.RequiresSimplePermission
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.InfoMessage
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.RequiresSimplePermission
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.HunterUiAction.ErrorImage
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.HunterUiAction.OnCapturedButtonClick
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.HunterUiAction.OnNavigate

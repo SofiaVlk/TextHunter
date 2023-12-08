@@ -61,8 +61,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaprojects.texthunter.R
 import com.sofiyavolkovaprojects.texthunter.R.string
 import com.sofiyavolkovaprojects.texthunter.data.local.database.DocumentItem
-import com.sofiyavolkovaprojects.texthunter.ui.components.CustomCircularProgressBar
-import com.sofiyavolkovaprojects.texthunter.ui.components.RequiresSimplePermission
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.RequiresSimplePermission
+import com.sofiyavolkovaprojects.texthunter.ui.common.theme.ExportIcon
+import com.sofiyavolkovaprojects.texthunter.ui.common.theme.SaveIcon
+import com.sofiyavolkovaprojects.texthunter.ui.common.theme.ShareIcon
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.OnSharedClick
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.OnTextToSpeechClicked
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.Initialized
@@ -84,9 +87,6 @@ import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUiState.Loading
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUiState.OnSnackBar
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUiState.TextUpdated
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.Storage
-import com.sofiyavolkovaprojects.texthunter.ui.theme.ExportIcon
-import com.sofiyavolkovaprojects.texthunter.ui.theme.SaveIcon
-import com.sofiyavolkovaprojects.texthunter.ui.theme.ShareIcon
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

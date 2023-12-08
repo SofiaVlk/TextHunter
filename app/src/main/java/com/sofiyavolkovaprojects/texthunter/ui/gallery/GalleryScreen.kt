@@ -49,10 +49,10 @@ import coil.request.ImageRequest
 import com.sofiyavolkovaprojects.texthunter.R.drawable
 import com.sofiyavolkovaprojects.texthunter.R.string
 import com.sofiyavolkovaprojects.texthunter.model.Media
-import com.sofiyavolkovaprojects.texthunter.ui.components.ButtonBasic
-import com.sofiyavolkovaprojects.texthunter.ui.components.CustomCircularProgressBar
-import com.sofiyavolkovaprojects.texthunter.ui.components.InfoMessage
-import com.sofiyavolkovaprojects.texthunter.ui.components.RequiresMediaImagesPermission
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.ButtonBasic
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.InfoMessage
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.RequiresMediaImagesPermission
 import com.sofiyavolkovaprojects.texthunter.ui.gallery.GallerySideEffect.CaptureText
 import com.sofiyavolkovaprojects.texthunter.ui.gallery.GallerySideEffect.NavigateToEdit
 import com.sofiyavolkovaprojects.texthunter.ui.gallery.GalleryUIAction.OnClickCaptureImage

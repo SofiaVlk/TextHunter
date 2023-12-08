@@ -1,4 +1,4 @@
-package com.sofiyavolkovaprojects.texthunter.ui.components
+package com.sofiyavolkovaprojects.texthunter.ui.common.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar

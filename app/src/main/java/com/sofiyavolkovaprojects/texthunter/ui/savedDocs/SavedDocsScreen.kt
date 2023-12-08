@@ -41,14 +41,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sofiyavolkovaprojects.texthunter.R.drawable
 import com.sofiyavolkovaprojects.texthunter.R.string
 import com.sofiyavolkovaprojects.texthunter.data.local.database.DocumentItem
-import com.sofiyavolkovaprojects.texthunter.ui.components.CustomCircularProgressBar
-import com.sofiyavolkovaprojects.texthunter.ui.components.InfoMessage
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
+import com.sofiyavolkovaprojects.texthunter.ui.common.components.InfoMessage
+import com.sofiyavolkovaprojects.texthunter.ui.common.theme.THTheme
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.EditText
 import com.sofiyavolkovaprojects.texthunter.ui.savedDocs.SavedDocsUiState.Empty
 import com.sofiyavolkovaprojects.texthunter.ui.savedDocs.SavedDocsUiState.Error
 import com.sofiyavolkovaprojects.texthunter.ui.savedDocs.SavedDocsUiState.Loading
 import com.sofiyavolkovaprojects.texthunter.ui.savedDocs.SavedDocsUiState.Success
-import com.sofiyavolkovaprojects.texthunter.ui.theme.THTheme
 
 @Composable
 fun SavedDocsScreen(

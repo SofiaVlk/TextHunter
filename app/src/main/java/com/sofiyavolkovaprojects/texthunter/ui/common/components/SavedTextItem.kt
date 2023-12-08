@@ -1,4 +1,4 @@
-package com.sofiyavolkovaprojects.texthunter.ui.components
+package com.sofiyavolkovaprojects.texthunter.ui.common.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

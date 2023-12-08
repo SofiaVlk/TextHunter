@@ -1,4 +1,4 @@
-package com.sofiyavolkovaprojects.texthunter.ui.components
+package com.sofiyavolkovaprojects.texthunter.ui.common.components
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sofiyavolkovaprojects.texthunter.ui.theme
+package com.sofiyavolkovaprojects.texthunter.ui.common.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.sofiyavolkovaprojects.texthunter.ui.components
+package com.sofiyavolkovaprojects.texthunter.ui.common.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import com.sofiyavolkovaprojects.texthunter.R
-import com.sofiyavolkovaprojects.texthunter.ui.theme.PurpleCactus
+import com.sofiyavolkovaprojects.texthunter.ui.common.theme.PurpleCactus
 
 @Composable
 @Preview(showBackground = true)
