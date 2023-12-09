@@ -148,7 +148,6 @@ dependencies {
     // If you want to additionally add CameraX ML Kit Vision Integration
     implementation(libs.androidx.camera.mlkit.vision)
     // If you want to additionally use the CameraX Extensions library
-    // To recognize Latin script
     implementation(libs.androidx.camera.extensions)
     // To recognize Latin script
     implementation (libs.mlkit.text.recognition)

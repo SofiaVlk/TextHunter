@@ -29,9 +29,10 @@ import kotlinx.coroutines.launch
 class GalleryViewModel @Inject constructor(
     private val imagesRepository: DefaultImagesRepository
 ) : ViewModel() {
+    //privado para que el estado solo pueda ser modificado desde el viewmodel
     private val _uiState: MutableStateFlow<GalleryUiState> = MutableStateFlow(Loading)
     val uiState: StateFlow<GalleryUiState> get() = _uiState
-
+    //privado para que el efecto solo pueda ser modificado desde el viewmodel
     private val _effect: Channel<GallerySideEffect> = Channel()
     val effect = _effect.receiveAsFlow()
 
@@ -41,6 +42,7 @@ class GalleryViewModel @Inject constructor(
     }
 //recupera del ropositorio una lista de imágenes
     private fun getGalleryImages() {
+    //lanza una corrutina  dentro del ciclo de vida del viewModel cancelandose automaticamente si este finaliza su ciclo
         viewModelScope.launch {
             imagesRepository.getImages()
                 .catch { _uiState.update { Error } }

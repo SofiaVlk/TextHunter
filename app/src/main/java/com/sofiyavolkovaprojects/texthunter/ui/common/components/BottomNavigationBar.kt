@@ -10,11 +10,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavData.BottomItemNavData
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.Gallery
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.Hunter
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.NavigationParams.Storage
 
+@Preview
+@Composable
+fun BottomNavigationBarSample() {
+    BottomNavigationBar(
+        currentRoute = "main",
+        onNavIconClick = {}
+    )
+}
 
 @Composable
 fun BottomNavigationBar(currentRoute: String, onNavIconClick: (String) -> Unit) {

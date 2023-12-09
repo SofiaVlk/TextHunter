@@ -18,7 +18,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 @Preview(showBackground = true)
 fun FloatingButtonCamSample() {
-    FloatingButtonCam(text = "title")
+    FloatingButtonCam(
+        text = "Title",
+        expanded = true
+    )
 }
 @Composable
 internal fun FloatingButtonCam(

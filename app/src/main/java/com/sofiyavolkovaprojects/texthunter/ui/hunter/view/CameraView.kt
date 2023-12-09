@@ -45,7 +45,6 @@ import com.sofiyavolkovaprojects.texthunter.R.string
 import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.CameraUIAction
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.getCameraProvider
-import com.sofiyavolkovaprojects.texthunter.ui.hunter.getOutputDirectory
 import com.sofiyavolkovaprojects.texthunter.ui.hunter.takePicture
 
 @Composable
@@ -78,14 +77,14 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
             }
             is CameraUIAction.OnSwitchCameraClick -> {
                 lensFacing =
-                    if (lensFacing == CameraSelector.LENS_FACING_BACK) CameraSelector.LENS_FACING_FRONT
-                    else
+                    if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                        CameraSelector.LENS_FACING_FRONT
+                    } else {
                         CameraSelector.LENS_FACING_BACK
+                    }
             }
             is CameraUIAction.OnGalleryViewClick -> {
-                if (true == context.getOutputDirectory().listFiles()?.isNotEmpty()) {
                     galleryLauncher.launch("image/*")
-                }
             }
         }
     }
@@ -149,15 +148,15 @@ fun CameraControls(cameraUIAction: (CameraUIAction) -> Unit) {
     ) {
 
         CameraControl(
-            Sharp.FlipCameraAndroid,
-            string.icn_camera_view_switch_camera_content_description,
+            imageVector = Sharp.FlipCameraAndroid,
+            contentDescId = string.th_hunter_screen_switch_camera,
             modifier= Modifier.size(64.dp),
             onClick = { cameraUIAction(CameraUIAction.OnSwitchCameraClick) }
         )
 
         CameraControl(
-            Sharp.Lens,
-            string.icn_camera_view_camera_shutter_content_description,
+            imageVector = Sharp.Lens,
+            contentDescId = string.th_hunter_screen_hunt_image,
             modifier= Modifier
                 .size(64.dp)
                 .padding(1.dp)
@@ -166,8 +165,8 @@ fun CameraControls(cameraUIAction: (CameraUIAction) -> Unit) {
         )
 
         CameraControl(
-            Sharp.PhotoLibrary,
-            string.icn_camera_view_view_gallery_content_description,
+            imageVector = Sharp.PhotoLibrary,
+            contentDescId = string.th_hunter_screen_open_gallery,
             modifier= Modifier.size(64.dp),
             onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
         )

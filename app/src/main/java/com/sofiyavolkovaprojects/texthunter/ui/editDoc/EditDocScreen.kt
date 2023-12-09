@@ -1,6 +1,5 @@
 package com.sofiyavolkovaprojects.texthunter.ui.editDoc
 
-import android.Manifest.permission
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -62,12 +61,11 @@ import com.sofiyavolkovaprojects.texthunter.R
 import com.sofiyavolkovaprojects.texthunter.R.string
 import com.sofiyavolkovaprojects.texthunter.data.local.database.DocumentItem
 import com.sofiyavolkovaprojects.texthunter.ui.common.components.CustomCircularProgressBar
-import com.sofiyavolkovaprojects.texthunter.ui.common.components.RequiresSimplePermission
 import com.sofiyavolkovaprojects.texthunter.ui.common.theme.ExportIcon
 import com.sofiyavolkovaprojects.texthunter.ui.common.theme.SaveIcon
 import com.sofiyavolkovaprojects.texthunter.ui.common.theme.ShareIcon
-import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.OnSharedClick
-import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.OnTextToSpeechClicked
+import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.readTextEffect
+import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.shareTextEffect
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.Initialized
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.OnExportClick
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.OnExportDismissClicked
@@ -115,17 +113,18 @@ internal fun EditDocScreen(
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val successMessageEditDoc = stringResource(R.string.th_edit_doc_screen_success_message)
-    val errorMessageEditDoc =  stringResource(string.th_edit_doc_screen_error_message)
+    val errorMessageEditDoc = stringResource(string.th_edit_doc_screen_error_message)
     val errorValidDocName = stringResource(string.th_edit_doc_screen_error_valid_doc_name)
 
     LaunchedEffect(true) {
         effectFlow.onEach { effect ->
-            when(effect) {
-                is OnTextToSpeechClicked -> {
+            when (effect) {
+                //efecto de leer
+                is readTextEffect -> {
                     speechText(context, effect.text, textToSpeech)
                 }
-
-                is OnSharedClick -> {
+                //efecto de compartir
+                is shareTextEffect -> {
                     shareText(context = context, textState = uiStateView.documentItem.body)
                 }
             }
@@ -136,37 +135,35 @@ internal fun EditDocScreen(
         is AlertDialogExportDoc -> {
             val alertDialogExportDoc = uiStateView.uiState as AlertDialogExportDoc
             if (alertDialogExportDoc.visible) {
-                RequiresSimplePermission(permission.WRITE_EXTERNAL_STORAGE) {
-                    AddTitleAlertDialog(
-                        onDismissRequest = { viewModel.handlerAction(OnExportDismissClicked) },
-                        onConfirmation = {
-                            viewModel.handlerAction(OnExportDoneClick)
-                            onDialogExportConfirmationClicked(
-                                fileName = fileName,
-                                context = context,
-                                textState = uiStateView.documentItem.body,
-                                onSuccess = { isSuccess ->
-                                    snackBarLauncher(
-                                        text = if (isSuccess) {
-                                            successMessageEditDoc
-                                        } else {
-                                            errorMessageEditDoc
-                                        },
-                                        scope = scope,
-                                        snackBarHostState = snackBarHostState
-                                    )
-                                },
-                                onError = {
-                                    viewModel.handlerAction(OnExportError(errorValidDocName))
-                                }
-                            )
-                        },
-                        dialogTitle = stringResource(string.th_edit_doc_screen_doc_title),
-                        dialogText = alertDialogExportDoc.message.ifEmpty { dialogText },
-                        placeholder = stringResource(string.th_edit_doc_screen_placeholder_export_doc_name),
-                        onValueChange = { name -> fileName = name }
-                    )
-                }
+                AddTitleAlertDialog(
+                    onDismissRequest = { viewModel.handlerAction(OnExportDismissClicked) },
+                    onConfirmation = {
+                        viewModel.handlerAction(OnExportDoneClick)
+                        onDialogExportConfirmationClicked(
+                            fileName = fileName,
+                            context = context,
+                            textState = uiStateView.documentItem.body,
+                            onSuccess = { isSuccess ->
+                                snackBarLauncher(
+                                    text = if (isSuccess) {
+                                        successMessageEditDoc
+                                    } else {
+                                        errorMessageEditDoc
+                                    },
+                                    scope = scope,
+                                    snackBarHostState = snackBarHostState
+                                )
+                            },
+                            onError = {
+                                viewModel.handlerAction(OnExportError(errorValidDocName))
+                            }
+                        )
+                    },
+                    dialogTitle = stringResource(string.th_edit_doc_screen_doc_title),
+                    dialogText = alertDialogExportDoc.message.ifEmpty { dialogText },
+                    placeholder = stringResource(string.th_edit_doc_screen_placeholder_export_doc_name),
+                    onValueChange = { name -> fileName = name }
+                )
             }
         }
 
@@ -227,8 +224,10 @@ private fun speechText(
     if (text.isNotEmpty()) {
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "tts1")
     } else {
-        Toast.makeText(context,
-            context.getString(string.th_edit_doc_screen_toast_not_empty), Toast.LENGTH_LONG)
+        Toast.makeText(
+            context,
+            context.getString(string.th_edit_doc_screen_toast_not_empty), Toast.LENGTH_LONG
+        )
             .show()
     }
 }
@@ -325,7 +324,8 @@ private fun AccordionVerticalButtonBar(
                         modifier = modifier
                             .size(38.dp)
                             .clickable { onClick(OnSaveClick) },
-                        imageVector = Icons.Default.Save, contentDescription = stringResource(string.th_edit_doc_screen_settings),
+                        imageVector = Icons.Default.Save,
+                        contentDescription = stringResource(string.th_edit_doc_screen_settings),
                         tint = SaveIcon
 
                     )

@@ -141,8 +141,9 @@ fun GalleryScreen(
     //Muestra una galería de imágenes
         PhotoGrid(
             photos = mediaList,
-            onClickItem = {action ->
-                viewModel.handlerAction(action)}
+            onClickItem = { action ->
+                viewModel.handlerAction(action)
+            }
         )
     }
 }

@@ -18,9 +18,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sofiyavolkovaprojects.texthunter.R
 import com.sofiyavolkovaprojects.texthunter.ui.navigation.capitalizeConstant
+
+@Preview
+@Composable
+private fun MainAppBarSample() {
+    MainAppBar(
+        currentRoute = "color",
+        mainRoute = "natoque",
+        onClick = {}
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

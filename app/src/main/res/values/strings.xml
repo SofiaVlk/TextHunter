@@ -16,9 +16,6 @@
 
 <resources>
     <string name="app_name">TextHunter</string>
-    <string name="icn_camera_view_view_gallery_content_description">\n</string>
-    <string name="icn_camera_view_camera_shutter_content_description" />
-    <string name="icn_camera_view_switch_camera_content_description" />
     <string name="th_fab_text">Capture</string>
     <string name="th_error_body_message">Lo sentimos parece que hemos tenido un error inesperado.</string>
     <string name="th_error_title">Error</string>
@@ -40,6 +37,9 @@
     <string name="th_edit_doc_screen_share_text_type">text/plain</string>
     <string name="th_hunter_screen_image_capture_error">"ERROR CAPTURE CAMERA: "</string>
     <string name="th_hunter_screen_image_uri">"Image Uri Captured from Camera View in: "</string>
+    <string name="th_hunter_screen_switch_camera">Cambio de cámara</string>
+    <string name="th_hunter_screen_hunt_image">Capturar imagen</string>
+    <string name="th_hunter_screen_open_gallery">Abrir galería del sistema</string>
     <string name="th_saved_docs_screen_no_saved_docs_message_title">No se han encontrado documentos guardados.</string>
     <string name="th_saved_docs_screen_no_saved_docs_body_message">En esta sección se mostrarán los textos capturados que hayas decidido guardar.</string>
 </resources>

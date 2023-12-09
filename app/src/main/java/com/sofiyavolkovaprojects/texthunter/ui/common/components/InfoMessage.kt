@@ -67,7 +67,7 @@ internal fun InfoMessage(
                 .padding(20.dp),
             text = bodyText,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.outline,
             textAlign = TextAlign.Center
 
         )

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sofiyavolkovaprojects.texthunter.data.DocumentsRepository
 import com.sofiyavolkovaprojects.texthunter.data.local.database.DocumentItem
-import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.OnSharedClick
-import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.OnTextToSpeechClicked
+import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.readTextEffect
+import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocSideEffect.shareTextEffect
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.Initialized
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.OnExportClick
 import com.sofiyavolkovaprojects.texthunter.ui.editDoc.EditDocUIAction.OnExportDismissClicked
@@ -56,7 +56,7 @@ class EditTextViewModel @Inject constructor(
     fun handlerAction(action: EditDocUIAction) {
         when (action) {
             OnSaveClick -> updateState { AlertDialogSaveDoc(true) }
-            is OnShareClick -> setEffect(OnSharedClick)
+            is OnShareClick -> setEffect(shareTextEffect)
             OnExportClick -> updateState {
                 AlertDialogExportDoc(true)
             }
@@ -102,7 +102,7 @@ class EditTextViewModel @Inject constructor(
                 }
             }
 
-            OnSpokenText -> setEffect(OnTextToSpeechClicked(uiState.value.documentItem.body) )
+            OnSpokenText -> setEffect(readTextEffect(uiState.value.documentItem.body) )
         }
     }
 
@@ -126,8 +126,8 @@ data class EditDocUiStateView(
 )
 
 sealed interface EditDocSideEffect {
-    data object OnSharedClick : EditDocSideEffect
-    data class OnTextToSpeechClicked(val text: String) : EditDocSideEffect
+    data object shareTextEffect : EditDocSideEffect
+    data class readTextEffect(val text: String) : EditDocSideEffect
 }
 
 sealed interface EditDocUiState {

@@ -185,7 +185,6 @@ private fun DocumentCard(
 
 @Preview(showBackground = true)
 @Composable
-
 private fun DefaultPreview() {
     THTheme {
         SavedDocsScreen(
