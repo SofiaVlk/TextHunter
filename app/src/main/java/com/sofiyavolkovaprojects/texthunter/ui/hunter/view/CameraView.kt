@@ -89,7 +89,7 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
         }
     }
 }
-
+//vista previa de la cámara
 @Composable
 private fun CameraPreviewView(
     imageCapture: ImageCapture,
@@ -135,6 +135,7 @@ private fun CameraPreviewView(
     }
 }
 
+//Botones de la cámara
 @Composable
 fun CameraControls(cameraUIAction: (CameraUIAction) -> Unit) {
 

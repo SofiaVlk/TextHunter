@@ -95,7 +95,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-
+//pantalla de edición
 @Composable
 internal fun EditDocScreen(
     viewModel: EditTextViewModel = hiltViewModel(),
@@ -132,6 +132,7 @@ internal fun EditDocScreen(
     }
 
     when (uiStateView.uiState) {
+        //exportar
         is AlertDialogExportDoc -> {
             val alertDialogExportDoc = uiStateView.uiState as AlertDialogExportDoc
             if (alertDialogExportDoc.visible) {
@@ -166,7 +167,7 @@ internal fun EditDocScreen(
                 )
             }
         }
-
+        //titulo para guardar doc
         is AlertDialogSaveDoc ->
             if ((uiStateView.uiState as AlertDialogSaveDoc).visible) {
                 AddTitleAlertDialog(
@@ -231,7 +232,7 @@ private fun speechText(
             .show()
     }
 }
-
+//compartir texto
 private fun shareText(textState: String, context: Context) {
     val sendIntent: Intent = Intent().apply {
         this.action = Intent.ACTION_SEND
@@ -241,7 +242,7 @@ private fun shareText(textState: String, context: Context) {
     val shareIntent = Intent.createChooser(sendIntent, null)
     context.startActivity(shareIntent)
 }
-
+//editar texo
 @Composable
 private fun EditDocument(
     documentItem: DocumentItem,
@@ -268,6 +269,7 @@ private fun EditDocument(
     }
 }
 
+//cabecera
 @Composable
 private fun Header(
     title: String,
@@ -288,6 +290,7 @@ private fun Header(
     }
 }
 
+//menú vertical desplegable
 @Composable
 private fun AccordionVerticalButtonBar(
     modifier: Modifier = Modifier,
@@ -368,7 +371,7 @@ private fun snackBarLauncher(
         snackBarHostState.showSnackbar(text)
     }
 }
-
+//confirmar alertdialog exportar
 private fun onDialogExportConfirmationClicked(
     fileName: String,
     context: Context,
@@ -393,7 +396,7 @@ private fun onDialogExportConfirmationClicked(
     }
 }
 
-//escribir
+//guardar en el alm. int.
 fun writeFileOnInternalStorage(context: Context, sTitle: String, sBody: String): Boolean {
     val file = File(context.filesDir, "documents")
     return try {

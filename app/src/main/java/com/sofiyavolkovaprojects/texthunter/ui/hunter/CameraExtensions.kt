@@ -42,7 +42,7 @@ fun ImageCapture.takePicture(
     onError: (ImageCaptureException) -> Unit
 ) {
     val outputDirectory = context.getOutputDirectory()
-    // Create output file to hold the image
+    //Crear fichero de salida para la imagen
     val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
     val outputFileOptions = getOutputFileOptions(lensFacing, photoFile)
 
@@ -52,9 +52,6 @@ fun ImageCapture.takePicture(
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                 val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
-                // If the folder selected is an external media directory, this is
-                // unnecessary but otherwise other apps will not be able to access our
-                // images unless we scan them using [MediaScannerConnection]
                 val mimeType = MimeTypeMap.getSingleton()
                     .getMimeTypeFromExtension(savedUri.toFile().extension)
                 MediaScannerConnection.scanFile(
@@ -77,12 +74,12 @@ fun getOutputFileOptions(
     photoFile: File
 ): ImageCapture.OutputFileOptions {
 
-    // Setup image capture metadata
+    // metadata
     val metadata = ImageCapture.Metadata().apply {
         // Mirror image when using the front camera
         isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
     }
-    // Create output options object which contains file + metadata
+    // file + metadata
     val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
         .setMetadata(metadata)
         .build()
@@ -104,6 +101,7 @@ private fun formatDate(format: String) =
        format
     }
 
+
 fun Context.getOutputDirectory(): File {
             val mediaDir = this.externalMediaDirs.firstOrNull()?.let {
         File(it, this.resources.getString(R.string.app_name)).apply { mkdirs() }
@@ -112,6 +110,7 @@ fun Context.getOutputDirectory(): File {
         mediaDir else File(this.filesDir, "images")
 }
 
+//Api ML Kit
 fun Context.textRecognizerProcess(uri: Uri): Task<Text> {
     val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     val image: InputImage = InputImage.fromFilePath(this, uri)

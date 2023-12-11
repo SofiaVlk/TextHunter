@@ -12,7 +12,7 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
-//Solicita permiso
+//Composable para el permiso de la cámara
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun RequiresSimplePermission(
@@ -31,6 +31,7 @@ internal fun RequiresSimplePermission(
     }
 }
 
+//composble para el permiso de almacenamiento
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun RequiresMediaImagesPermission(

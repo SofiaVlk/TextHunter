@@ -37,11 +37,11 @@ class EditTextViewModel @Inject constructor(
     private val savedDocsRepository: DocumentsRepository
 ) : ViewModel() {
 
-    // Backing property to avoid state updates from other classes
+    //Para evitar que el estado se actualice desde otras clases
     private val _uiState: MutableStateFlow<EditDocUiStateView> =
         MutableStateFlow(EditDocUiStateView())
 
-    // The UI collects from this StateFlow to get its state updates
+    // La UI recoge de este StateFlow para actualizar su estado
     val uiState: StateFlow<EditDocUiStateView> by lazy { _uiState }
 
     private val _effect: Channel<EditDocSideEffect> = Channel()
@@ -53,6 +53,7 @@ class EditTextViewModel @Inject constructor(
         }
     }
 
+    //se comunican las acciones
     fun handlerAction(action: EditDocUIAction) {
         when (action) {
             OnSaveClick -> updateState { AlertDialogSaveDoc(true) }
@@ -125,11 +126,13 @@ data class EditDocUiStateView(
     val uiState: EditDocUiState = Initialize
 )
 
+//efectos compartir y leer
 sealed interface EditDocSideEffect {
     data object shareTextEffect : EditDocSideEffect
     data class readTextEffect(val text: String) : EditDocSideEffect
 }
 
+//estados
 sealed interface EditDocUiState {
     data object Loading : EditDocUiState
     data class AlertDialogSaveDoc(val visible: Boolean = false) : EditDocUiState

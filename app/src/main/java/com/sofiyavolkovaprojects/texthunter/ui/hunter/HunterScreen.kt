@@ -34,7 +34,7 @@ fun HunterScreen(
     navigateTo: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
+//permiso de cámara
     RequiresSimplePermission {
         HunterScreenView(
             modifier = modifier,
@@ -65,6 +65,7 @@ fun HunterScreenView(
                 navigateTo(EditText.createNavTextRoute(uiState.text))
             }
         }
+        //capturar el texto de una imagen
         Initial -> CameraView(
             onImageCaptured = { uri, _ ->
                 Log.d(TAG, imageUri + uri.path)
@@ -85,7 +86,7 @@ fun HunterScreenView(
                 onActionEvent(ErrorImage)
             }
         )
-
+//pantalla de error al capturar
         ErrorScreen -> InfoMessage(
             imagePainter = painterResource(drawable.error_message_01),
             title = stringResource(string.th_error_title),

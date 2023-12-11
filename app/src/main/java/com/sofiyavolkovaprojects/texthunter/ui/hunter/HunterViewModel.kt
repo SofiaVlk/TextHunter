@@ -37,6 +37,7 @@ class HunterViewModel @Inject constructor(): ViewModel() {
     }
 }
 
+//Estados
 sealed interface HunterUiState {
     data object Initial : HunterUiState
     data object Loading : HunterUiState

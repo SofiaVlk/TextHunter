@@ -43,14 +43,14 @@ class SavedDocsViewModel @Inject constructor(
     init {
         getDocumentList()
     }
-
+//elimina una lista de documentos
     fun removeDocument(document: DocumentItem) {
         viewModelScope.launch {
             savedDocsRepository.remove(document)
         }
         getDocumentList()
     }
-
+//recupera una lista de documentos
     private fun getDocumentList() {
         viewModelScope.launch {
             savedDocsRepository.getSavedDocuments()
@@ -67,7 +67,7 @@ class SavedDocsViewModel @Inject constructor(
         }
     }
 }
-
+//estados de SavedDocs
 sealed interface SavedDocsUiState {
     data object Loading : SavedDocsUiState
     data object Empty : SavedDocsUiState

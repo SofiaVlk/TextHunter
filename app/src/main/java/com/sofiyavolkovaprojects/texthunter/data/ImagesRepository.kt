@@ -10,7 +10,7 @@ interface ImagesRepository{
     suspend fun deleteImage(media: Media)
 
 }
-
+// recupera una lista de imágenes y elimina una imagen seleccionada
 class DefaultImagesRepository @Inject constructor(
     private val localImagesSource: THLocalImageSource
 ) : ImagesRepository {
